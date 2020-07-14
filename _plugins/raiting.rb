@@ -1,6 +1,6 @@
 module Rating
 
-  class StudentInRating
+  class StudentInRating < Liquid::Drop
     def initialize(student, achievements)
       @student = student
       @achievements = achievements
@@ -31,9 +31,9 @@ module Rating
 
   class RatingDataGenerator < Jekyll::Generator
     def generate(site)
-      ratingTemplate = site.pages.detect {|page| page.name == 'raiting.html'}
+      ratingTemplate = site.pages.detect {|page| page.name == 'rating.html'}
       rating = Raiting.calculateRating(site.data["students"], site.data["achievements"])
-      ratingTemplate.data["raiting"] = rating
+      ratingTemplate.data["rating"] = rating
     end
   end
 end
