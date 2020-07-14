@@ -4,6 +4,7 @@ module Rating
     def initialize(student, achievements)
       @student = student
       @achievements = achievements
+      @score = achievements.map { |a| a["value"] }.reduce(0, :+)
     end
 
     def student
@@ -12,6 +13,10 @@ module Rating
 
     def achievements
       @achievements
+    end
+
+    def score
+      @score
     end
   end
 
@@ -22,10 +27,12 @@ module Rating
         achievementsHashTable[achievement["id"]] = achievement
       end
 
-      return students.map { |student|
-        achievementsOfTheStudent = student["achievements"].map { |id| achievementsHashTable[id] }
-        StudentInRating.new(student, achievementsOfTheStudent)
-      }
+      return students
+        .map { |student|
+          achievementsOfTheStudent = student["achievements"].map { |id| achievementsHashTable[id] }
+          StudentInRating.new(student, achievementsOfTheStudent)
+        }
+        .sort_by {|rating| rating.score * -1}
     end
   end
 
