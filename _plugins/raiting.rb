@@ -39,6 +39,7 @@ module Rating
   class RatingDataGenerator < Jekyll::Generator
     def generate(site)
       ratingTemplate = site.pages.detect {|page| page.name == 'rating.html'}
+      puts "hi"
       rating = Raiting.calculateRating(site.data["students"], site.data["achievements"])
       ratingTemplate.data["rating"] = rating
     end
