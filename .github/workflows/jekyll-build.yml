@@ -25,4 +25,4 @@ jobs:
     - name: Install dependencies
       run: bundle install
     - name: deploy jekyll
-      run: bundle exec jgd -u https://VysotskiVadim:${{secrets.GITHUB_TOKEN}}/poc-jekyll/poc-jekyll.github.io -b master
+      run: bundle exec jgd -u https://VysotskiVadim:${{secrets.GITHUB_TOKEN}}@github.com/poc-jekyll/poc-jekyll.github.io.git -b master
