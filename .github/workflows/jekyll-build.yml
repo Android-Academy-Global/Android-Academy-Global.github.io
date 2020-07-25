@@ -25,7 +25,8 @@ jobs:
     - name: Install dependencies
       run: bundle install
     - name: Setup git
-      run: git config --global user.name "ci"
-      run: git config --global user.email "ci@github.com"
+      run: |
+        git config --global user.name "ci"
+        git config --global user.email "ci@github.com"
     - name: deploy jekyll
       run: bundle exec jgd -u https://VysotskiVadim:${{secrets.GITHUB_TOKEN}}@github.com/poc-jekyll/poc-jekyll.github.io.git -b master -r main -c _config.yml
