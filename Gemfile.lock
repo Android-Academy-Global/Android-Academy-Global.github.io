@@ -1,3 +1,8 @@
+PATH
+  remote: achievements
+  specs:
+    achievements (0.0.1)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -67,6 +72,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  achievements!
   jekyll-feed (~> 0.6)
   jgd
   minima (~> 2.5.1)

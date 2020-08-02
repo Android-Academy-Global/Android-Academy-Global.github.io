@@ -1,20 +1,6 @@
 - name: Иван Иванов
-  github: vanua01
-  achievements:
-    - first-home-work
-    - homework-1
-    - homework-2
-
+  telegramId: vanua01
 - name: Петя Петров
-  github: petya77
-  achievements: 
-    - homework-1
-    - homework-2
-
+  telegramId: petya7
 - name: Вася Васин
-  github: vasuagit
-  achievements: 
-    - homework-1
-    - homework-2
-    - homework-3
-    - homework-4
+  telegramId: vasuagit
