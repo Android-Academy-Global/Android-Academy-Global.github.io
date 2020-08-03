@@ -9,7 +9,7 @@ module Rating
       students = site.data["students"].map { |student|
           Student.new(telegramId: student["telegramId"], name: student["name"])
       }
-      rating = Achievements.calculateRating(site.data["students"])
+      rating = Achievements.calculateRating(students)
       ratingTemplate.data["rating"] = rating
     end
   end

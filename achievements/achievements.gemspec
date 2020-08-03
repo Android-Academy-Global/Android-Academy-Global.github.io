@@ -9,4 +9,5 @@ Gem::Specification.new do |s|
     s.files       = ["lib/achievements.rb"]
     s.homepage    = ''
     s.license     = 'MIT'
+    s.add_runtime_dependency "liquid", [">= 0"]
   end
