@@ -6,6 +6,7 @@ module Achievements
             @id = id
             @name = name
             @description = description
+            @value = value
         end
     end
 

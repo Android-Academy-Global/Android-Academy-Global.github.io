@@ -7,7 +7,8 @@ module Achievements
 
         def initialize()
             @students = []
-            @homeworkReviews = []
+            @homeworkReviews = Hash.new
+            @homeWorks = Hash.new
         end
 
         def withStudents(students)
@@ -15,28 +16,72 @@ module Achievements
             return self
         end
 
-        def withHomeWorkReviews(homeworkReviews)
-            @homeworkReviews = homeworkReviews
+        def withHomeworks(homeWorks:, homeworkReviews:)
+            @homeworkReviews = homeworkReviews.group_by { |r| r.studentId }
+            @homeWorks = Hash.new
+            homeWorks.each { |hw| @homeWorks[hw.id] = hw }
+            
             return self
         end
 
         def calculate()
-            # achievementsHashTable = {}
-            # for achievement in achievements
-            # achievementsHashTable[achievement["id"]] = achievement
-            # end
-
-            # return students
-            # .map { |student|
-            #     achievementsOfTheStudent = student["achievements"].map { |id| achievementsHashTable[id] }
-            #     StudentInRating.new(student, achievementsOfTheStudent)
-            # }
-            # .sort_by {|rating| rating.score * -1}
-            studentsRating = @students
-                .map { |student|
-                    StudentInRating.new(student)
-                }
+            studentsAchievements = @students.map { |student|
+                accumulator = StudentAccomulator.new(student)
+                accumulator.addAchievements(calculateHomeWorkAchievements(student))
+                accumulator
+            }
+            currentRatingPosition = 0
+            currentScore = Float::INFINITY
+            studentsRating = studentsAchievements
+                .sort_by { |a| a.currentScore }
+                .map do |a| 
+                    if a.currentScore < currentScore
+                        currentScore = a.currentScore
+                        currentRatingPosition += 1
+                    end
+                    StudentInRating.new(student: a.student, position: currentRatingPosition, achievements: a.achievements, totalScore: a.currentScore)
+                end
             return CalculatedAchievements.new(studentsRating: studentsRating)
+        end
+
+        private def calculateHomeWorkAchievements(student)
+            completedHomeworks = @homeworkReviews[student.telegramId]
+            if completedHomeworks == nil
+                return []
+            end
+            result = []
+            completedHomeworks.each { |homeWorkReview|
+                homeWork = @homeWorks[homeWorkReview.homeWorkId]
+                if homeWork.dueDate <= homeWorkReview.homeworkCompletedDate
+                    result.push(List::HOME_WORK_COMPLETED_1)
+                end
+            }
+            return result
+        end
+    end
+
+    class StudentAccomulator
+        def initialize(student)
+            @student = student
+            @achievements = []
+            @currentScore = 0
+        end
+
+        def addAchievements(achievements)
+            @achievements.concat(achievements)
+            @currentScore = achievements.inject(@currentScore) { |acc, a| acc + a.value }
+        end
+
+        def student
+            @student
+        end
+
+        def achievements
+            @achievements
+        end
+
+        def currentScore
+            @currentScore
         end
     end
 
@@ -56,21 +101,22 @@ module Achievements
     end
 
     class StudentsAchievement < Liquid::Drop
-        attr_reader :student, :achievementReason
+        attr_reader :student, :achievement, :achievementReason
         
-        def initialize(student:, achievementReason:)
+        def initialize(student:, achievement:, achievementReason:)
             @student = student
+            @achievement = achievement
             @achievementReason = achievementReason
         end
     end
 
     class StudentInRating < Liquid::Drop
-        def initialize(student)
+        attr_reader :student, :position, :achievements, :totalScore
+        def initialize(student:, position:, achievements:, totalScore:)
             @student = student
-        end
-
-        def student
-            @student
+            @position = position
+            @achievements = achievements
+            @totalScore = totalScore
         end
     end
 
@@ -83,12 +129,12 @@ module Achievements
     end
 
     class HomeWorkReview < Liquid::Drop
-        attr_reader :homeWorkId, :mentorId, :studentId, :reviewDate
-        def initialize(homeWorkId:, mentorId:, studentId:, reviewDate:)
+        attr_reader :homeWorkId, :mentorId, :studentId, :homeworkCompletedDate
+        def initialize(homeWorkId:, mentorId:, studentId:, homeworkCompletedDate:)
             @homeWorkId = homeWorkId
             @mentorId = mentorId
             @studentId = studentId
-            @reviewDate = reviewDate
+            @homeworkCompletedDate = homeworkCompletedDate
         end
     end
 
