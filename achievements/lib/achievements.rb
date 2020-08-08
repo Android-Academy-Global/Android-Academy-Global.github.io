@@ -4,7 +4,23 @@ require "achievements_list"
 module Achievements
 
     class AchievementsCalculator
-        def self.calculateRating(students)
+
+        def initialize()
+            @students = []
+            @homeworkReviews = []
+        end
+
+        def withStudents(students)
+            @students = students
+            return self
+        end
+
+        def withHomeWorkReviews(homeworkReviews)
+            @homeworkReviews = homeworkReviews
+            return self
+        end
+
+        def calculate()
             # achievementsHashTable = {}
             # for achievement in achievements
             # achievementsHashTable[achievement["id"]] = achievement
@@ -16,10 +32,18 @@ module Achievements
             #     StudentInRating.new(student, achievementsOfTheStudent)
             # }
             # .sort_by {|rating| rating.score * -1}
-            return students
+            studentsRating = @students
                 .map { |student|
                     StudentInRating.new(student)
                 }
+            return CalculatedAchievements.new(studentsRating: studentsRating)
+        end
+    end
+
+    class CalculatedAchievements
+        attr_reader :studentsRating
+        def initialize(studentsRating:)
+            @studentsRating = studentsRating
         end
     end
 
@@ -28,6 +52,15 @@ module Achievements
         def initialize(telegramId:, name:)
             @telegramId = telegramId
             @name = name
+        end
+    end
+
+    class StudentsAchievement < Liquid::Drop
+        attr_reader :student, :achievementReason
+        
+        def initialize(student:, achievementReason:)
+            @student = student
+            @achievementReason = achievementReason
         end
     end
 
