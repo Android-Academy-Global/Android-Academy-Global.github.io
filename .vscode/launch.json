@@ -1,0 +1,29 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Debug Test",
+            "type": "Ruby",
+            "request": "launch",
+            "useBundler": true,
+            "pathToBundler": "/usr/local/bin/bundle",
+            "pathToRDebugIDE": "/var/lib/gems/2.5.0/gems/ruby-debug-ide-0.7.2",
+            "program": "${workspaceRoot}/achievements/test/test_achievements.rb",
+            "args": ["--name", "AchievementsTest#test_student_completed_one_homework_in_time"]
+        },
+        {
+            "name": "Debug rake",
+            "type": "Ruby",
+            "request": "launch",
+            "useBundler": true,
+            "pathToBundler": "/usr/local/bin/bundle",
+            "pathToRDebugIDE": "/var/lib/gems/2.5.0/gems/ruby-debug-ide-0.7.2",
+            "cwd": "${workspaceRoot}/achievements",
+            "program": "/usr/bin/rake",
+            
+        }
+    ]
+}
