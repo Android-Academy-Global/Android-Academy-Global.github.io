@@ -33,7 +33,7 @@ module Achievements
             currentRatingPosition = 0
             currentScore = Float::INFINITY
             studentsRating = studentsAchievements
-                .sort_by { |a| a.currentScore }
+                .sort_by { |a| -a.currentScore }
                 .map do |a| 
                     if a.currentScore < currentScore
                         currentScore = a.currentScore
@@ -52,7 +52,7 @@ module Achievements
             result = []
             completedHomeworks.each { |homeWorkReview|
                 homeWork = @homeWorks[homeWorkReview.homeWorkId]
-                if homeWork.dueDate <= homeWorkReview.homeworkCompletedDate
+                if homeWork.dueDate >= homeWorkReview.homeworkCompletedDate
                     result.push(List::HOME_WORK_COMPLETED_1)
                 end
             }

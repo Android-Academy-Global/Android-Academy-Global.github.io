@@ -40,7 +40,7 @@ class AchievementsTest < Minitest::Test
       assert_equal "student1", studentsRating[1].student.telegramId
       assert_equal 2, studentsRating[1].position
       assert_equal [], studentsRating[1].achievements
-      assert_equal 0, studentsRating[0].totalScore
+      assert_equal 0, studentsRating[1].totalScore
 
   end
 
