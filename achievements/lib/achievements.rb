@@ -54,7 +54,13 @@ module Achievements
             completedHomeworks.each { |homeWorkReview|
                 homeWork = @homeWorks[homeWorkReview.homeWorkId]
                 if homeWork.dueDate >= homeWorkReview.homeworkCompletedDate
-                    result.push(nextHomeworkAchievement)
+                    result.push(
+                        StudentsAchievement.new(
+                            student: student,
+                            achievement: nextHomeworkAchievement,
+                            achievementReason: "Completed homework #{homeWork.id} on #{homeWorkReview.homeworkCompletedDate}"
+                        )
+                    )
                     nextHomeworkAchievement = nextHomeworkCompleted(nextHomeworkAchievement)
                 else
                     nextHomeworkAchievement = List::HOME_WORK_COMPLETED_1
@@ -73,7 +79,7 @@ module Achievements
 
         def addAchievements(achievements)
             @achievements.concat(achievements)
-            @currentScore = achievements.inject(@currentScore) { |acc, a| acc + a.value }
+            @currentScore = achievements.inject(@currentScore) { |acc, a| acc + a.achievement.value }
         end
 
         def student

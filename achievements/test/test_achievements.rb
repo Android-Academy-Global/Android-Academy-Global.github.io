@@ -34,7 +34,7 @@ class AchievementsTest < Minitest::Test
       
       assert_equal 1, studentsRating[0].position
       assert_equal "student2", studentsRating[0].student.telegramId
-      assert_equal [List::HOME_WORK_COMPLETED_1], studentsRating[0].achievements
+      assert_equal List::HOME_WORK_COMPLETED_1, studentsRating[0].achievements[0].achievement
       assert_equal List::HOME_WORK_COMPLETED_1.value, studentsRating[0].totalScore
       
       assert_equal "student1", studentsRating[1].student.telegramId
@@ -81,9 +81,10 @@ class AchievementsTest < Minitest::Test
       List::HOME_WORK_COMPLETED_5,
       List::HOME_WORK_COMPLETED_1
     ]
+    actualAchievements = firstStudentRating.achievements.map { |sa| sa.achievement }
     assert_equal(
       expectedAchivements,
-      firstStudentRating.achievements
+      actualAchievements
     )
   end
 end
