@@ -12,7 +12,7 @@
             "pathToBundler": "/usr/local/bin/bundle",
             "pathToRDebugIDE": "/var/lib/gems/2.5.0/gems/ruby-debug-ide-0.7.2",
             "program": "${workspaceRoot}/achievements/test/test_achievements.rb",
-            "args": ["--name", "AchievementsTest#test_student_completed_one_homework_in_time"]
+            "args": ["--name", "AchievementsTest#test_student_completed_six_homeworks_in_a_row"]
         },
         {
             "name": "Debug rake",

@@ -50,10 +50,14 @@ module Achievements
                 return []
             end
             result = []
+            nextHomeworkAchievement = List::HOME_WORK_COMPLETED_1
             completedHomeworks.each { |homeWorkReview|
                 homeWork = @homeWorks[homeWorkReview.homeWorkId]
                 if homeWork.dueDate >= homeWorkReview.homeworkCompletedDate
-                    result.push(List::HOME_WORK_COMPLETED_1)
+                    result.push(nextHomeworkAchievement)
+                    nextHomeworkAchievement = nextHomeworkCompleted(nextHomeworkAchievement)
+                else
+                    nextHomeworkAchievement = List::HOME_WORK_COMPLETED_1
                 end
             }
             return result

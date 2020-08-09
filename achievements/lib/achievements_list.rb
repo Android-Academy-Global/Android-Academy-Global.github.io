@@ -19,4 +19,21 @@ module Achievements
         HOME_WORK_COMPLETED_5 = Achievement.new(id: "homework_completed_5", value: 700, name: "5 Homeworks in the row", description: "Studend completed 5 homeworks in a row in time")
     end
 
+    def nextHomeworkCompleted(achievement)
+        return case achievement.id
+        when List::HOME_WORK_COMPLETED_1.id
+            List::HOME_WORK_COMPLETED_2
+        when List::HOME_WORK_COMPLETED_2.id
+            List::HOME_WORK_COMPLETED_3
+        when List::HOME_WORK_COMPLETED_3.id
+            List::HOME_WORK_COMPLETED_4
+        when List::HOME_WORK_COMPLETED_4.id
+            List::HOME_WORK_COMPLETED_5
+        when List::HOME_WORK_COMPLETED_5.id
+            List::HOME_WORK_COMPLETED_1
+        else
+            raise "wrong homework achievement #{achievement.id}"
+        end
+    end
+
 end
