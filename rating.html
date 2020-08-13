@@ -4,8 +4,8 @@
 
 <h1>Rating:</h1>
 
-{% for ratingItem in page.rating %}
+{% for studentInRating in page.rating %}
     <div>
-        {{ ratingItem.student.name }}, {{ratingItem.score}}
+        {{ ratingItem.position }}, {{ ratingItem.student.name }}, {{ratingItem.totalScore}}
     </div>
 {% endfor %}
