@@ -6,6 +6,6 @@
 
 {% for studentInRating in page.rating %}
     <div>
-        {{ ratingItem.position }}, {{ ratingItem.student.name }}, {{ratingItem.totalScore}}
+        {{ studentInRating.position }}, {{ studentInRating.student.name }}, {{ studentInRating.totalScore }}
     </div>
 {% endfor %}
