@@ -34,7 +34,7 @@
             "pathToRDebugIDE": "/var/lib/gems/2.5.0/gems/ruby-debug-ide-0.7.2",
             "cwd": "${workspaceRoot}",
             "program": "/usr/local/bin/jekyll",
-            "args": ["serve"]
+            "args": ["serve", "--trace"]
         }
     ]
 }

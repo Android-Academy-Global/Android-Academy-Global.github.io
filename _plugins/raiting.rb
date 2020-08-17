@@ -24,10 +24,29 @@ module Rating
 
       rating = ratingCalculator.calculate().studentsRating
       ratingTemplate.data["rating"] = rating
+
+      rating.each do |studentInRating|
+        site.pages << StudentPage.new(site, studentInRating)
+      end
     end
 
     def parseDate(date)
       return Date.strptime("12/22/2011", "%m/%d/%Y")
     end
   end
+
+
+  class StudentPage < Jekyll::Page
+    def initialize(site, studentInRating)
+      @site = site
+      @base = site.source
+      @dir = File.join('students', studentInRating.student.telegramId)
+      @name = 'index.html'
+
+      self.process(@name)
+      self.read_yaml(File.join(@base, '_layouts'), "student.html")
+      self.data["studentInRating"] = studentInRating
+    end
+  end
+
 end
