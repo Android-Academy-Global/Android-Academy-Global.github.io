@@ -1,8 +1,12 @@
 ---
 # empty
-title: hey
 ---
-<h1>{{page.title}}</h1>
+<h1>{{ page.studentInRating.student.name }} - #{{ page.studentInRating.position }}</h1>
 <div>
-    {{ page.studentInRating.position }}, {{ page.studentInRating.student.name }}, {{ page.studentInRating.totalScore }}
+    <ol>
+    {% for studentAchievement in page.studentInRating.achievements %}
+        <li>{{studentAchievement.achievement.name}}({{studentAchievement.achievement.value}}): {{studentAchievement.achievementReason}}</ul>
+    {% endfor %}
+    </ol>
+    Total score: {{ page.studentInRating.totalScore }}
 </div>

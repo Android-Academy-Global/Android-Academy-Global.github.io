@@ -46,7 +46,6 @@ module Rating
       self.process(@name)
       self.read_yaml(File.join(@base, '_layouts'), "student.html")
       self.data["studentInRating"] = studentInRating
-      self.data['title'] = "test"
     end
   end
 
