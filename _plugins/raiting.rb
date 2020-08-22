@@ -10,12 +10,15 @@ module Rating
       ratingCalculator = AchievementsCalculator.new()
 
       students = site.data["students"].map { |student|
-          Student.new(telegramId: student["telegramId"], name: student["name"])
+        Student.new(telegramId: student["telegramId"], name: student["name"])
       }
       ratingCalculator.withStudents(students)
 
+      orderNumber = -1
+      #TODO: order by due date
       homeWorks = site.data["homeworks"].map { |homework|
-          HomeWork.new(id: homework["id"], dueDate: parseDate(homework["dueDate"]))
+        orderNumber = orderNumber + 1
+        HomeWork.new(id: homework["id"], dueDate: parseDate(homework["dueDate"]), orderNumber: orderNumber)
       }
       homeWorksReviews = site.data["homework-reviews"].map { |review|
         HomeWorkReview.new(homeWorkId: review["homeworkId"], mentorId: review["mentorId"], studentId: review["studentId"], homeworkCompletedDate: parseDate(review["homeworkCompleted"]))
