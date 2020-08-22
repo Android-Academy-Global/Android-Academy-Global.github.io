@@ -20,7 +20,6 @@ module Achievements
             @homeworkReviews = homeworkReviews.group_by { |r| r.studentId }
             @homeWorks = Hash.new
             homeWorks.each { |hw| @homeWorks[hw.id] = hw }
-            
             return self
         end
 
@@ -51,21 +50,28 @@ module Achievements
             end
             result = []
             nextHomeworkAchievement = List::HOME_WORK_COMPLETED_1
-            completedHomeworks.each { |homeWorkReview|
-                homeWork = @homeWorks[homeWorkReview.homeWorkId]
-                if homeWork.dueDate >= homeWorkReview.homeworkCompletedDate
-                    result.push(
-                        StudentsAchievement.new(
-                            student: student,
-                            achievement: nextHomeworkAchievement,
-                            achievementReason: "Completed homework #{homeWork.id} on #{homeWorkReview.homeworkCompletedDate}"
+            lastCompletedHomework = -99
+            completedHomeworks
+                .sort_by { |homeWorkReview| @homeWorks[homeWorkReview.homeWorkId].orderNumber }
+                .each { |homeWorkReview|
+                    homeWork = @homeWorks[homeWorkReview.homeWorkId]
+                    if (homeWork.orderNumber - 1 != lastCompletedHomework)
+                        nextHomeworkAchievement = List::HOME_WORK_COMPLETED_1
+                    end
+                    if homeWork.dueDate >= homeWorkReview.homeworkCompletedDate
+                        result.push(
+                            StudentsAchievement.new(
+                                student: student,
+                                achievement: nextHomeworkAchievement,
+                                achievementReason: "Completed homework #{homeWork.id} on #{homeWorkReview.homeworkCompletedDate}"
+                            )
                         )
-                    )
-                    nextHomeworkAchievement = nextHomeworkCompleted(nextHomeworkAchievement)
-                else
-                    nextHomeworkAchievement = List::HOME_WORK_COMPLETED_1
-                end
-            }
+                        nextHomeworkAchievement = nextHomeworkCompleted(nextHomeworkAchievement)
+                    else
+                        nextHomeworkAchievement = List::HOME_WORK_COMPLETED_1
+                    end
+                    lastCompletedHomework = homeWork.orderNumber
+                }
             return result
         end
     end
@@ -131,10 +137,11 @@ module Achievements
     end
 
     class HomeWork < Liquid::Drop
-        attr_reader :id, :dueDate
-        def initialize(id:, dueDate:)
+        attr_reader :id, :dueDate, :orderNumber
+        def initialize(id:, dueDate:, orderNumber:)
             @id = id
             @dueDate = dueDate
+            @orderNumber = orderNumber
         end
     end
 

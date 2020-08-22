@@ -5,6 +5,15 @@ include Achievements
 
 $testStudents = [Student.new(telegramId: "student1", name: "test1"), Student.new(telegramId: "student2", name: "test 2")]
 
+$testHomeworks = [
+  HomeWork.new(id: "test homework", dueDate: DateTime.new(2000,9,15), orderNumber: 0),
+  HomeWork.new(id: "test homework 2", dueDate: DateTime.new(2000,9,20), orderNumber: 1),
+  HomeWork.new(id: "test homework 3", dueDate: DateTime.new(2000,9,25), orderNumber: 2),
+  HomeWork.new(id: "test homework 4", dueDate: DateTime.new(2000,10,1), orderNumber: 3),
+  HomeWork.new(id: "test homework 5", dueDate: DateTime.new(2000,10,5), orderNumber: 4),
+  HomeWork.new(id: "test homework 6", dueDate: DateTime.new(2000,10,10), orderNumber: 5)
+]
+
 class AchievementsTest < Minitest::Test
 
   def setup
@@ -19,7 +28,7 @@ class AchievementsTest < Minitest::Test
 
   def test_student_completed_one_homework_in_time
       homeworks = [
-        HomeWork.new(id: "test homework", dueDate: DateTime.new(2000,9,15))
+        HomeWork.new(id: "test homework", dueDate: DateTime.new(2000,9,15), orderNumber: 0)
       ]
       homeworkReviews = [
         HomeWorkReview.new(homeWorkId: homeworks[0].id, mentorId: "test", studentId: $testStudents[0].telegramId, homeworkCompletedDate: DateTime.new(2000,9,16)),
@@ -44,27 +53,54 @@ class AchievementsTest < Minitest::Test
 
   end
 
-  def test_student_completed_six_homeworks_in_a_row
-    homeworks = [
-      HomeWork.new(id: "test homework", dueDate: DateTime.new(2000,9,15)),
-      HomeWork.new(id: "test homework 2", dueDate: DateTime.new(2000,9,20)),
-      HomeWork.new(id: "test homework 3", dueDate: DateTime.new(2000,9,25)),
-      HomeWork.new(id: "test homework 4", dueDate: DateTime.new(2000,10,1)),
-      HomeWork.new(id: "test homework 5", dueDate: DateTime.new(2000,10,5)),
-      HomeWork.new(id: "test homework 6", dueDate: DateTime.new(2000,10,10))
-    ]
+  def test_not_completed_homework_breaks_the_stuck
     homeworkReviews = [
-      HomeWorkReview.new(homeWorkId: homeworks[0].id, mentorId: "test", studentId: $testStudents[0].telegramId, homeworkCompletedDate: DateTime.new(2000,9,14)),
-      HomeWorkReview.new(homeWorkId: homeworks[1].id, mentorId: "test", studentId: $testStudents[0].telegramId, homeworkCompletedDate: DateTime.new(2000,9,19)),
-      HomeWorkReview.new(homeWorkId: homeworks[2].id, mentorId: "test", studentId: $testStudents[0].telegramId, homeworkCompletedDate: DateTime.new(2000,9,24)),
-      HomeWorkReview.new(homeWorkId: homeworks[3].id, mentorId: "test", studentId: $testStudents[0].telegramId, homeworkCompletedDate: DateTime.new(2000,9,30)),
-      HomeWorkReview.new(homeWorkId: homeworks[4].id, mentorId: "test", studentId: $testStudents[0].telegramId, homeworkCompletedDate: DateTime.new(2000,10,3)),
-      HomeWorkReview.new(homeWorkId: homeworks[5].id, mentorId: "test", studentId: $testStudents[0].telegramId, homeworkCompletedDate: DateTime.new(2000,10,7))
+      HomeWorkReview.new(homeWorkId: $testHomeworks[0].id, mentorId: "test", studentId: $testStudents[0].telegramId, homeworkCompletedDate: DateTime.new(2000,9,14)),
+      HomeWorkReview.new(homeWorkId: $testHomeworks[1].id, mentorId: "test", studentId: $testStudents[0].telegramId, homeworkCompletedDate: DateTime.new(2000,9,19)),
+      HomeWorkReview.new(homeWorkId: $testHomeworks[2].id, mentorId: "test", studentId: $testStudents[0].telegramId, homeworkCompletedDate: DateTime.new(2000,9,24)),
+      HomeWorkReview.new(homeWorkId: $testHomeworks[4].id, mentorId: "test", studentId: $testStudents[0].telegramId, homeworkCompletedDate: DateTime.new(2000,10,3)),
+      HomeWorkReview.new(homeWorkId: $testHomeworks[5].id, mentorId: "test", studentId: $testStudents[0].telegramId, homeworkCompletedDate: DateTime.new(2000,10,7))
     ]
 
     studentsRating = @calculator
       .withStudents($testStudents)
-      .withHomeworks(homeWorks: homeworks, homeworkReviews: homeworkReviews)
+      .withHomeworks(homeWorks: $testHomeworks, homeworkReviews: homeworkReviews)
+      .calculate()
+      .studentsRating
+
+    firstStudentRating = studentsRating[0]
+    
+    assert_equal 1, firstStudentRating.position
+    assert_equal "student1", firstStudentRating.student.telegramId
+    
+    expectedAchivements = [
+      List::HOME_WORK_COMPLETED_1,
+      List::HOME_WORK_COMPLETED_2,
+      List::HOME_WORK_COMPLETED_3,
+      List::HOME_WORK_COMPLETED_1,
+      List::HOME_WORK_COMPLETED_2
+    ]
+    actualAchievements = firstStudentRating.achievements.map { |sa| sa.achievement }
+    assert_equal(
+      expectedAchivements,
+      actualAchievements
+    )
+  end
+
+  def test_student_completed_six_homeworks_in_a_row
+    
+    homeworkReviews = [
+      HomeWorkReview.new(homeWorkId: $testHomeworks[0].id, mentorId: "test", studentId: $testStudents[0].telegramId, homeworkCompletedDate: DateTime.new(2000,9,14)),
+      HomeWorkReview.new(homeWorkId: $testHomeworks[1].id, mentorId: "test", studentId: $testStudents[0].telegramId, homeworkCompletedDate: DateTime.new(2000,9,19)),
+      HomeWorkReview.new(homeWorkId: $testHomeworks[2].id, mentorId: "test", studentId: $testStudents[0].telegramId, homeworkCompletedDate: DateTime.new(2000,9,24)),
+      HomeWorkReview.new(homeWorkId: $testHomeworks[3].id, mentorId: "test", studentId: $testStudents[0].telegramId, homeworkCompletedDate: DateTime.new(2000,9,30)),
+      HomeWorkReview.new(homeWorkId: $testHomeworks[4].id, mentorId: "test", studentId: $testStudents[0].telegramId, homeworkCompletedDate: DateTime.new(2000,10,3)),
+      HomeWorkReview.new(homeWorkId: $testHomeworks[5].id, mentorId: "test", studentId: $testStudents[0].telegramId, homeworkCompletedDate: DateTime.new(2000,10,7))
+    ]
+
+    studentsRating = @calculator
+      .withStudents($testStudents)
+      .withHomeworks(homeWorks: $testHomeworks, homeworkReviews: homeworkReviews)
       .calculate()
       .studentsRating
 
