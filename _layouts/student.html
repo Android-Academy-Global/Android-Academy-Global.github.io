@@ -5,7 +5,10 @@
 <div>
     <ol>
     {% for studentAchievement in page.studentInRating.achievements %}
-        <li>{{studentAchievement.achievement.name}}({{studentAchievement.achievement.value}}): {{studentAchievement.achievementReason}}</ul>
+        <li>
+            {% include achievement_link.html achievement=studentAchievement.achievement %},
+            ({{studentAchievement.achievement.value}}):
+            {{studentAchievement.achievementReason}}</ul>
     {% endfor %}
     </ol>
     Total score: {{ page.studentInRating.totalScore }}

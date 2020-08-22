@@ -28,6 +28,10 @@ module Rating
       rating.each do |studentInRating|
         site.pages << StudentPage.new(site, studentInRating)
       end
+
+      List::ALL_ACHIEVEMENTS.each do |achievement|
+        site.pages << AchievementPage.new(site, achievement)
+      end
     end
 
     def parseDate(date)
@@ -46,6 +50,19 @@ module Rating
       self.process(@name)
       self.read_yaml(File.join(@base, '_layouts'), "student.html")
       self.data["studentInRating"] = studentInRating
+    end
+  end
+
+  class AchievementPage < Jekyll::Page
+    def initialize(site, achievement)
+      @site = site
+      @base = site.source
+      @dir = File.join('achievements', achievement.id)
+      @name = 'index.html'
+
+      self.process(@name)
+      self.read_yaml(File.join(@base, '_layouts'), "achievement.html")
+      self.data["achievement"] = achievement
     end
   end
 
