@@ -25,6 +25,11 @@ module Rating
       }
       ratingCalculator.withHomeworks(homeWorks: homeWorks, homeworkReviews: homeWorksReviews)
 
+      studentsHelps = site.data["students-helps"].map { |help|
+        StudentHelp.new(studentIdHowHelped: help["from"], studentIdWhoGotHelp: help["to"], comment: help["comment"])
+      }
+      ratingCalculator.withStudentsHelp(studentsHelps)
+
       rating = ratingCalculator.calculate().studentsRating
       ratingTemplate.data["rating"] = rating
 
