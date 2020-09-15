@@ -123,4 +123,26 @@ class AchievementsTest < Minitest::Test
       actualAchievements
     )
   end
+
+  def test_student_help_student
+    
+    helps = [StudentHelp.new(studentIdHowHelped: "student2", studentIdWhoGotHelp: "student1", comment: "test comment")]
+    
+    studentsRating = @calculator
+      .withStudents($testStudents)
+      .withStudentsHelp(helps)
+      .calculate()
+      .studentsRating
+
+    helpingHandAchievement = studentsRating[0].achievements[0]
+    
+    assert_equal(
+      "Comment from test1: test comment",
+      helpingHandAchievement.achievementReason
+    )
+    assert_equal(
+      List::HELPING_HAND,
+      helpingHandAchievement.achievement
+    )
+  end
 end

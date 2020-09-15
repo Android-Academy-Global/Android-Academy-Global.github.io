@@ -6,13 +6,22 @@ module Achievements
     class AchievementsCalculator
 
         def initialize()
-            @students = []
+            @students = Hash.new
             @homeworkReviews = Hash.new
             @homeWorks = Hash.new
+            @helps = Hash.new
         end
 
         def withStudents(students)
-            @students = students
+            @students = Hash.new
+            students.each { |s|
+                @students[s.telegramId] = s
+            }
+            return self
+        end
+
+        def withStudentsHelp(helps)
+            @helps = helps.group_by { |h| h.studentIdHowHelped }
             return self
         end
 
@@ -24,9 +33,10 @@ module Achievements
         end
 
         def calculate()
-            studentsAchievements = @students.map { |student|
+            studentsAchievements = @students.map { |id, student|
                 accumulator = StudentAccomulator.new(student)
                 accumulator.addAchievements(calculateHomeWorkAchievements(student))
+                accumulator.addAchievements(calculateHelpingHandAchievements(student))
                 accumulator
             }
             currentRatingPosition = 0
@@ -41,6 +51,24 @@ module Achievements
                     StudentInRating.new(student: a.student, position: currentRatingPosition, achievements: a.achievements, totalScore: a.currentScore)
                 end
             return CalculatedAchievements.new(studentsRating: studentsRating)
+        end
+
+        private def calculateHelpingHandAchievements(student)
+            result = []
+            studentHelps = @helps[student.telegramId]
+            if (studentHelps != nil)
+                studentHelps.each { |h|
+                    studentWhoGotHelp = @students[h.studentIdWhoGotHelp]
+                    if (studentWhoGotHelp != nil)
+                        result.push(StudentsAchievement.new(
+                            student: student,
+                            achievement: List::HELPING_HAND,
+                            achievementReason: "Comment from #{studentWhoGotHelp.name}: #{h.comment}"
+                        ))
+                    end
+                }    
+            end
+            return result
         end
 
         private def calculateHomeWorkAchievements(student)
@@ -152,6 +180,15 @@ module Achievements
             @mentorId = mentorId
             @studentId = studentId
             @homeworkCompletedDate = homeworkCompletedDate
+        end
+    end
+
+    class StudentHelp < Liquid::Drop
+        attr_reader :studentIdHowHelped, :studentIdWhoGotHelp, :comment
+        def initialize(studentIdHowHelped:, studentIdWhoGotHelp:, comment:)
+            @studentIdHowHelped = studentIdHowHelped
+            @studentIdWhoGotHelp = studentIdWhoGotHelp
+            @comment = comment
         end
     end
 
