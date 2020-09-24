@@ -1,13 +1,33 @@
----
-# empty 
----
-
 <h1>Rating:</h1>
 
-{% for studentInRating in page.rating %}
+
     <div>
-        {{ studentInRating.position }}
-        {% include student_link.html student=studentInRating.student %},
-        {{ studentInRating.totalScore }}
+        1
+        <a href="/students/@petr">Petr Test</a>,
+        300
     </div>
-{% endfor %}
+
+    <div>
+        2
+        <a href="/students/@ivan">Ivan Test</a>,
+        100
+    </div>
+
+    <div>
+        2
+        <a href="/students/@test2">test2</a>,
+        100
+    </div>
+
+    <div>
+        3
+        <a href="/students/@vasua">Vasily</a>,
+        0
+    </div>
+
+    <div>
+        3
+        <a href="/students/@test">Test</a>,
+        0
+    </div>
+
