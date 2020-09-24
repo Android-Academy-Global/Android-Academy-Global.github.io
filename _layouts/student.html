@@ -1,0 +1,15 @@
+---
+# empty
+---
+<h1>{{ page.studentInRating.student.name }} - #{{ page.studentInRating.position }}</h1>
+<div>
+    <ol>
+    {% for studentAchievement in page.studentInRating.achievements %}
+        <li>
+            {% include achievement_link.html achievement=studentAchievement.achievement %},
+            ({{studentAchievement.achievement.value}}):
+            {{studentAchievement.achievementReason}}</ul>
+    {% endfor %}
+    </ol>
+    Total score: {{ page.studentInRating.totalScore }}
+</div>
