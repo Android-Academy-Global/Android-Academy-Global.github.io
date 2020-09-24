@@ -31,4 +31,4 @@ jobs:
         git config --global user.name "ci"
         git config --global user.email "ci@github.com"
     - name: deploy jekyll
-      run: ./deploy.sh https://VysotskiVadim:${{secrets.GITHUB_TOKEN}}@github.com/poc-jekyll/poc-jekyll.github.io.git master main _config.yml "bundle exec" ""
+      run: ./deploy.sh https://VysotskiVadim:${{secrets.GITHUB_TOKEN}}@github.com/poc-jekyll/poc-jekyll.github.io.git main _config.yml "bundle exec" ""
