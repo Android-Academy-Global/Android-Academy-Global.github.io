@@ -25,6 +25,7 @@ if [ ! -e _site ]; then
   echo -e "\nJekyll didn't generate anything in _site!"
   exit -1
 fi
+cp -R _site ${TEMP}
 
 CLONE=${TEMP}/clone
 echo -e "Cloning Github repository:"
@@ -33,7 +34,7 @@ cd ${CLONE}
 
 echo -e "\nDeploying into ${BRANCH} branch:"
 rm -rf *
-cp -R ../../_site/* .
+cp -R ${TEMP}/_site/* .
 rm -f README.md
 git add .
 git commit -am "new version $(date)" --allow-empty
