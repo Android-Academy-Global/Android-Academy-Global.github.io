@@ -1,13 +1,25 @@
 ---
-# empty 
+layout: default
+title: "Top students of Android Academy"
 ---
 
-<h1>Rating:</h1>
+<h1>{{page.title}}</h1>
 
-{% for studentInRating in page.rating %}
-    <div>
-        {{ studentInRating.position }}
-        {% include student_link.html student=studentInRating.student %},
-        {{ studentInRating.totalScore }}
-    </div>
-{% endfor %}
+<table class="table">
+<thead>
+    <tr>
+    <th scope="col">Position</th>
+    <th scope="col">Name</th>
+    <th scope="col">Total Score</th>
+    </tr>
+</thead>
+<tbody>
+    {% for studentInRating in page.rating %}
+        <tr>
+            <th scope="row">{{ studentInRating.position }}</th>
+            <td>{% include student_link.html student=studentInRating.student %} </td>
+            <td>{{ studentInRating.totalScore }} </tr>
+        </div>
+    {% endfor %}
+</tbody>
+</table>
