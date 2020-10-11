@@ -1,7 +1,11 @@
 ---
-# empty
+layout: default
 ---
-<h1>{{ page.achievement.name }} - #{{ page.achievement.value }}</h1>
-<div>
-    {{ page.achievement.description }}
+<div class="media mt-4">
+    <img src="/assets/achievements/{{page.achievement.id}}.svg" class="w-25 align-self-start mr-3 img-thumbnail" alt="{{page.achievement.name}}">
+    <div class="media-body">
+        <h5 class="mt-0">{{ page.achievement.name }}</h5>
+        <p>Gives {{ page.achievement.value }} points to its owner</p>
+        <p>{{ page.achievement.description }}</p>
+    </div>
 </div>
