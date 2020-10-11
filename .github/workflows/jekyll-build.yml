@@ -27,7 +27,7 @@ jobs:
     - name: Install dependencies
       run: bundle install
     - name: Sync with Google Doc
-      run: ./sync-docs.sh
+      run: ./sync-docs.sh ${{secrets.AIRTABLE_ACCESS_TOKEN}}
     - name: Setup git
       run: |
         git config --global user.name "ci"

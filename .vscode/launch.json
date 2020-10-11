@@ -35,6 +35,16 @@
             "cwd": "${workspaceRoot}",
             "program": "/usr/local/bin/jekyll",
             "args": ["serve", "--trace"]
-        }
+        },
+        {
+            "name": "Debug convert script",
+            "type": "Ruby",
+            "request": "launch",
+            "useBundler": true,
+            "pathToBundler": "/usr/local/bin/bundle",
+            "pathToRDebugIDE": "/var/lib/gems/2.5.0/gems/ruby-debug-ide-0.7.2",
+            "cwd": "${workspaceRoot}",
+            "program": "convert-students.ruby"
+        },
     ]
 }
