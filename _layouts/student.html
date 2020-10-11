@@ -1,15 +1,26 @@
 ---
 layout: default
 ---
-<h1>{{ page.studentInRating.student.name }} - #{{ page.studentInRating.position }}</h1>
-<div>
-    <ol>
+<h1>{{ page.studentInRating.student.name }}</h1>
+<p>
+    Student #{{ page.studentInRating.position }} with total score <b>{{ page.studentInRating.totalScore }}</b> points.
+</p>
+
+<div class="row">
     {% for studentAchievement in page.studentInRating.achievements %}
-        <li>
-            {% include achievement_link.html achievement=studentAchievement.achievement %},
-            ({{studentAchievement.achievement.value}}):
-            {{studentAchievement.achievementReason}}</ul>
+        <div class="col-sm">
+            <div class="card" style="width: 12rem;">
+                
+                <div class="card-body">
+                    <img src="/assets/achievements/{{studentAchievement.achievement.id}}.svg" class="card-img-top" alt="{{studentAchievement.achievement.name}}">
+                    <p></p>
+                    <h5 class="card-title">{{studentAchievement.achievement.name}}</h5>
+                    <p class="card-text">
+                        {{studentAchievement.achievementReason}}
+                    </p>
+                    {% include achievement_link.html achievement=studentAchievement.achievement text="More..." %}
+                </div>
+            </div>
+        </div>
     {% endfor %}
-    </ol>
-    Total score: {{ page.studentInRating.totalScore }}
 </div>
