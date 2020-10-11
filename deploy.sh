@@ -5,21 +5,12 @@ set -o pipefail
 
 URL=$1
 BRANCH=$2
-BRANCH_FROM=$3
-DEPLOY_CONFIG=$4
-BUNDLE=$5
-DRAFTS=$6
+DEPLOY_CONFIG=$3
+BUNDLE=$4
+DRAFTS=$5
 SRC=$(pwd)
 TEMP=$(mktemp -d -t jgd-XXX)
 trap "rm -rf ${TEMP}" EXIT
-CLONE=${TEMP}/clone
-COPY=${TEMP}/copy
-
-echo -e "Cloning Github repository:"
-git clone -b "${BRANCH_FROM}" "${URL}" "${CLONE}"
-cp -R ${CLONE} ${COPY}
-
-cd "${CLONE}"
 
 echo -e "\nBuilding Jekyll site:"
 rm -rf _site
@@ -34,20 +25,12 @@ if [ ! -e _site ]; then
   echo -e "\nJekyll didn't generate anything in _site!"
   exit -1
 fi
-
 cp -R _site ${TEMP}
 
-cd ${TEMP}
-rm -rf ${CLONE}
-mv ${COPY} ${CLONE}
+CLONE=${TEMP}/clone
+echo -e "Cloning Github repository:"
+git clone -b "${BRANCH}" "${URL}" "${CLONE}"
 cd ${CLONE}
-
-echo -e "\nPreparing ${BRANCH} branch:"
-if [ -z "$(git branch -a | grep origin/${BRANCH})" ]; then
-  git checkout --orphan "${BRANCH}"
-else
-  git checkout "${BRANCH}"
-fi
 
 echo -e "\nDeploying into ${BRANCH} branch:"
 rm -rf *
