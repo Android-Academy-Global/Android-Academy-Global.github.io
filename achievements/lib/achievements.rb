@@ -10,6 +10,7 @@ module Achievements
             @homeworkReviews = Hash.new
             @homeWorks = Hash.new
             @helps = Hash.new
+            @attendees = []
         end
 
         def withStudents(students)
@@ -25,6 +26,11 @@ module Achievements
             return self
         end
 
+        def addWorkshopAttendees(attendees)
+            @attendees = @attendees.concat(attendees)
+            return self
+        end
+
         def withHomeworks(homeWorks:, homeworkReviews:)
             @homeworkReviews = homeworkReviews.group_by { |r| r.studentId }
             @homeWorks = Hash.new
@@ -37,6 +43,7 @@ module Achievements
                 accumulator = StudentAccomulator.new(student)
                 accumulator.addAchievements(calculateHomeWorkAchievements(student))
                 accumulator.addAchievements(calculateHelpingHandAchievements(student))
+                accumulator.addAchievements(calculateAttendedWorkshopAchievements(student))
                 accumulator
             }
             currentRatingPosition = 0
@@ -68,6 +75,19 @@ module Achievements
                     end
                 }    
             end
+            return result
+        end
+
+        private def calculateAttendedWorkshopAchievements(student)
+            attendedAt = @attendees.select {|a| a.studentId == student.telegramId}.uniq {|a| a.workshopId}
+            result = attendedAt.map { |a|
+                StudentsAchievement.new(
+                    student: student,
+                    achievement: List::ATTENDED_WORKSHOP,
+                    achievementReason: "For beeing a part of #{a.workshopId}"
+                )
+            }
+            
             return result
         end
 
@@ -126,6 +146,15 @@ module Achievements
 
         def currentScore
             @currentScore
+        end
+    end
+
+    class WorkshopAttending
+        attr_reader :workshopId, :studentId, :timestamp
+        def initialize(workshopId:, studentId:, timestamp:)
+            @workshopId = workshopId
+            @studentId = studentId
+            @timestamp = timestamp
         end
     end
 
