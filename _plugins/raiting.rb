@@ -17,7 +17,7 @@ module Rating
       orderNumber = -1
       homeWorks = site.data["homeworks"].map { |homework|
         orderNumber = orderNumber + 1
-        HomeWork.new(id: homework["id"], dueDate: parseDate(homework["dueDate"]), orderNumber: orderNumber)
+        HomeWork.new(id: homework["id"], name: homework["name"], dueDate: parseDate(homework["dueDate"]), orderNumber: orderNumber)
       }
       homeWorksReviews = site.data["homework-reviews"].map { |review|
         HomeWorkReview.new(homeWorkId: review["homeworkId"], mentorId: review["mentorId"], studentId: review["studentId"], homeworkCompletedDate: parseDate(review["homeworkCompleted"]))

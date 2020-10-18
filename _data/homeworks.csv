@@ -1,3 +1,3 @@
-id,dueDate
-kotlin,2020-10-23
-activities,2020-11-25
+id,dueDate,name
+kotlin,2020-10-23,"Kotlin Workshop"
+activities,2020-11-25,"Activities Workshop"

@@ -80,12 +80,17 @@ module Achievements
 
         private def calculateAttendedWorkshopAchievements(student)
             attendedAt = @attendees.select {|a| a.studentId == student.telegramId}.uniq {|a| a.workshopId}
-            result = attendedAt.map { |a|
-                StudentsAchievement.new(
-                    student: student,
-                    achievement: List::ATTENDED_WORKSHOP,
-                    achievementReason: "For beeing a part of #{a.workshopId}"
-                )
+            result = []
+            attendedAt.each { |a|
+                workshop = @homeWorks[a.workshopId]
+                if (workshop != nil)
+                    result.push(
+                        StudentsAchievement.new(
+                            student: student,
+                            achievement: List::ATTENDED_WORKSHOP,
+                            achievementReason: "For beeing a part of #{workshop.name}"
+                    ))
+                end
             }
             
             return result
@@ -194,9 +199,10 @@ module Achievements
     end
 
     class HomeWork < Liquid::Drop
-        attr_reader :id, :dueDate, :orderNumber
-        def initialize(id:, dueDate:, orderNumber:)
+        attr_reader :id, :name, :dueDate, :orderNumber
+        def initialize(id:, name:, dueDate:, orderNumber:)
             @id = id
+            @name = name
             @dueDate = dueDate
             @orderNumber = orderNumber
         end
