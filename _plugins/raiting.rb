@@ -15,7 +15,6 @@ module Rating
       ratingCalculator.withStudents(students)
 
       orderNumber = -1
-      #TODO: order by due date
       homeWorks = site.data["homeworks"].map { |homework|
         orderNumber = orderNumber + 1
         HomeWork.new(id: homework["id"], dueDate: parseDate(homework["dueDate"]), orderNumber: orderNumber)
@@ -43,7 +42,7 @@ module Rating
     end
 
     def parseDate(date)
-      return Date.strptime("12/22/2011", "%m/%d/%Y")
+      return Date.strptime(date, "%Y-%m-%d")
     end
   end
 

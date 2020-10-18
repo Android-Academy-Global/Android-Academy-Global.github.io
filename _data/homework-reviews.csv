@@ -1,4 +1,4 @@
-Timestamp,mentorId,studentId,homeworkCompleted,homeworkId
-7/25/2020 21:46:49,@mentor1,@petr,9/10/2020,Kotlin
-7/25/2020 21:46:49,@mentor1,@ivan,9/11/2020,Kotlin
-7/25/2020 21:46:49,@mentor1,@petr,9/18/2020,Activities
+mentorId,studentId,homeworkCompleted,homeworkId
+@mentor1,@petr,2020-10-25,kotlin
+@mentor1,@ivan,2020-10-25,kotlin
+@mentor1,@petr,2020-10-25,activities
