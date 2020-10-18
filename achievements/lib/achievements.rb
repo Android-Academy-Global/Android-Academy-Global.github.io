@@ -116,7 +116,7 @@ module Achievements
                             StudentsAchievement.new(
                                 student: student,
                                 achievement: nextHomeworkAchievement,
-                                achievementReason: "Completed homework #{homeWork.id} on #{homeWorkReview.homeworkCompletedDate}"
+                                achievementReason: "For completing homework from #{homeWork.name} workshop"
                             )
                         )
                         nextHomeworkAchievement = nextHomeworkCompleted(nextHomeworkAchievement)
