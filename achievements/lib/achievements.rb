@@ -79,7 +79,7 @@ module Achievements
         end
 
         private def calculateAttendedWorkshopAchievements(student)
-            attendedAt = @attendees.select {|a| a.studentId == student.telegramId}
+            attendedAt = @attendees.select {|a| a.studentId == student.telegramId}.uniq {|a| a.workshopId}
             result = attendedAt.map { |a|
                 StudentsAchievement.new(
                     student: student,

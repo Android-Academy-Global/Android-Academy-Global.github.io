@@ -187,4 +187,25 @@ class AchievementsTest < Minitest::Test
       secondStudentAchievemt.achievement
     )
   end
+
+  def test_students_attended_workshops_only_once
+    
+    attendeeList = [
+      WorkshopAttending.new(workshopId: "workshop1", studentId: "student1", timestamp: DateTime.new(2000,9,20)),
+      WorkshopAttending.new(workshopId: "workshop1", studentId: "student1", timestamp: DateTime.new(2000,9,20)),
+      WorkshopAttending.new(workshopId: "workshop1", studentId: "student1", timestamp: DateTime.new(2000,9,20))
+    ]
+    homeWorks = [
+      HomeWork.new(id: "workshop1", dueDate: DateTime.new(2000,9,15), orderNumber: 0)
+    ]
+    
+    studentsRating = @calculator
+      .withStudents($testStudents)
+      .withHomeworks(homeWorks: homeWorks, homeworkReviews: [])
+      .addWorkshopAttendees(attendeeList)
+      .calculate()
+      .studentsRating
+
+    assert_equal(1, studentsRating[0].achievements.size)
+  end
 end
