@@ -6,7 +6,14 @@ csv_string = CSV.generate do |csv|
     csv << ["telegramId", "name"]
     users["records"].each do |record|
         fields = record["fields"]
-        csv << ["@" + fields["Telegram Nickname"], fields["First Name"] + " " + fields["Last Name"]]
+        if (fields != nil)
+            telegramId = fields["Telegram Nickname"]
+            firstName = fields["First Name"]
+            lastName = fields["Last Name"]
+            if (telegramId != nil && firstName != nil && lastName != nil)
+                csv << ["@" + telegramId, firstName + " " + lastName]
+            end
+        end
     end
 end
 
