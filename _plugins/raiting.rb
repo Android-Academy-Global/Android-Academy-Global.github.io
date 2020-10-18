@@ -29,6 +29,16 @@ module Rating
       }
       ratingCalculator.withStudentsHelp(studentsHelps)
 
+      site.data["homeworks"].each { |homework|
+          attendeesFileName = homework["id"] + "-attendees"
+          if site.data[attendeesFileName] != nil
+            attendees = site.data[attendeesFileName].map { |a|
+              WorkshopAttending.new(workshopId: homework["id"], studentId: a["telegramId"], timestamp: parseTimeStamp(a["Timestamp"]))
+            }
+            ratingCalculator.addWorkshopAttendees(attendees)
+          end
+      }
+
       rating = ratingCalculator.calculate().studentsRating
       ratingTemplate.data["rating"] = rating
 
@@ -43,6 +53,10 @@ module Rating
 
     def parseDate(date)
       return Date.strptime(date, "%Y-%m-%d")
+    end
+
+    def parseTimeStamp(timeStamp)
+      return Date.strptime(timeStamp, "%m/%d/%Y %k:%M:%S")
     end
   end
 

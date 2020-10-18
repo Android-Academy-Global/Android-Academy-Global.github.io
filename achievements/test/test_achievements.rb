@@ -145,4 +145,46 @@ class AchievementsTest < Minitest::Test
       helpingHandAchievement.achievement
     )
   end
+
+  def test_students_attended_workshops
+    
+    firstAttendeeList = [
+      WorkshopAttending.new(workshopId: "workshop1", studentId: "student1", timestamp: DateTime.new(2000,9,20))
+    ]
+    secondAttendeeList = [
+      WorkshopAttending.new(workshopId: "workshop2", studentId: "student2", timestamp: DateTime.new(2000,9,20))
+    ]
+    homeWorks = [
+      HomeWork.new(id: "workshop1", dueDate: DateTime.new(2000,9,15), orderNumber: 0),
+      HomeWork.new(id: "workshop2", dueDate: DateTime.new(2000,9,20), orderNumber: 1),
+    ]
+    
+    studentsRating = @calculator
+      .withStudents($testStudents)
+      .withHomeworks(homeWorks: homeWorks, homeworkReviews: [])
+      .addWorkshopAttendees(firstAttendeeList)
+      .addWorkshopAttendees(secondAttendeeList)
+      .calculate()
+      .studentsRating
+
+    firstStudentAchievement = studentsRating[0].achievements[0]
+    secondStudentAchievemt = studentsRating[1].achievements[0]
+    
+    assert_equal(
+      "For beeing a part of workshop1",
+      firstStudentAchievement.achievementReason
+    )
+    assert_equal(
+      List::ATTENDED_WORKSHOP,
+      firstStudentAchievement.achievement
+    )
+    assert_equal(
+      "For beeing a part of workshop2",
+      secondStudentAchievemt.achievementReason
+    )
+    assert_equal(
+      List::ATTENDED_WORKSHOP,
+      secondStudentAchievemt.achievement
+    )
+  end
 end
