@@ -6,12 +6,12 @@ include Achievements
 $testStudents = [Student.new(telegramId: "student1", name: "test1"), Student.new(telegramId: "student2", name: "test 2")]
 
 $testHomeworks = [
-  HomeWork.new(id: "test homework", dueDate: DateTime.new(2000,9,15), orderNumber: 0),
-  HomeWork.new(id: "test homework 2", dueDate: DateTime.new(2000,9,20), orderNumber: 1),
-  HomeWork.new(id: "test homework 3", dueDate: DateTime.new(2000,9,25), orderNumber: 2),
-  HomeWork.new(id: "test homework 4", dueDate: DateTime.new(2000,10,1), orderNumber: 3),
-  HomeWork.new(id: "test homework 5", dueDate: DateTime.new(2000,10,5), orderNumber: 4),
-  HomeWork.new(id: "test homework 6", dueDate: DateTime.new(2000,10,10), orderNumber: 5)
+  HomeWork.new(id: "test_homework", name: "test homework", dueDate: DateTime.new(2000,9,15), orderNumber: 0),
+  HomeWork.new(id: "test_homework_2", name: "test homework 2", dueDate: DateTime.new(2000,9,20), orderNumber: 1),
+  HomeWork.new(id: "test_homework_3", name: "test homework 3", dueDate: DateTime.new(2000,9,25), orderNumber: 2),
+  HomeWork.new(id: "test_homework_4", name: "test homework 4", dueDate: DateTime.new(2000,10,1), orderNumber: 3),
+  HomeWork.new(id: "test_homework_5", name: "test homework 5", dueDate: DateTime.new(2000,10,5), orderNumber: 4),
+  HomeWork.new(id: "test_homework_6", name: "test homework 6", dueDate: DateTime.new(2000,10,10), orderNumber: 5)
 ]
 
 class AchievementsTest < Minitest::Test
@@ -28,7 +28,7 @@ class AchievementsTest < Minitest::Test
 
   def test_student_completed_one_homework_in_time
       homeworks = [
-        HomeWork.new(id: "test homework", dueDate: DateTime.new(2000,9,15), orderNumber: 0)
+        HomeWork.new(id: "test_homework", name: "test", dueDate: DateTime.new(2000,9,15), orderNumber: 0)
       ]
       homeworkReviews = [
         HomeWorkReview.new(homeWorkId: homeworks[0].id, mentorId: "test", studentId: $testStudents[0].telegramId, homeworkCompletedDate: DateTime.new(2000,9,16)),
@@ -44,6 +44,7 @@ class AchievementsTest < Minitest::Test
       assert_equal 1, studentsRating[0].position
       assert_equal "student2", studentsRating[0].student.telegramId
       assert_equal List::HOME_WORK_COMPLETED_1, studentsRating[0].achievements[0].achievement
+      assert_equal "For completing homework from test workshop", studentsRating[0].achievements[0].achievementReason
       assert_equal List::HOME_WORK_COMPLETED_1.value, studentsRating[0].totalScore
       
       assert_equal "student1", studentsRating[1].student.telegramId
@@ -155,8 +156,8 @@ class AchievementsTest < Minitest::Test
       WorkshopAttending.new(workshopId: "workshop2", studentId: "student2", timestamp: DateTime.new(2000,9,20))
     ]
     homeWorks = [
-      HomeWork.new(id: "workshop1", dueDate: DateTime.new(2000,9,15), orderNumber: 0),
-      HomeWork.new(id: "workshop2", dueDate: DateTime.new(2000,9,20), orderNumber: 1),
+      HomeWork.new(id: "workshop1", name: "The first workshop", dueDate: DateTime.new(2000,9,15), orderNumber: 0),
+      HomeWork.new(id: "workshop2", name: "The second workshop", dueDate: DateTime.new(2000,9,20), orderNumber: 1),
     ]
     
     studentsRating = @calculator
@@ -171,7 +172,7 @@ class AchievementsTest < Minitest::Test
     secondStudentAchievemt = studentsRating[1].achievements[0]
     
     assert_equal(
-      "For beeing a part of workshop1",
+      "For beeing a part of The first workshop",
       firstStudentAchievement.achievementReason
     )
     assert_equal(
@@ -179,7 +180,7 @@ class AchievementsTest < Minitest::Test
       firstStudentAchievement.achievement
     )
     assert_equal(
-      "For beeing a part of workshop2",
+      "For beeing a part of The second workshop",
       secondStudentAchievemt.achievementReason
     )
     assert_equal(
@@ -196,7 +197,7 @@ class AchievementsTest < Minitest::Test
       WorkshopAttending.new(workshopId: "workshop1", studentId: "student1", timestamp: DateTime.new(2000,9,20))
     ]
     homeWorks = [
-      HomeWork.new(id: "workshop1", dueDate: DateTime.new(2000,9,15), orderNumber: 0)
+      HomeWork.new(id: "workshop1", name: "the first workshop", dueDate: DateTime.new(2000,9,15), orderNumber: 0)
     ]
     
     studentsRating = @calculator
