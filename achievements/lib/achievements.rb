@@ -10,7 +10,7 @@ module Achievements
             @homeworkReviews = Hash.new
             @homeWorks = Hash.new
             @helps = Hash.new
-            @attendees = []
+            @feedbacks = []
         end
 
         def withStudents(students)
@@ -26,8 +26,8 @@ module Achievements
             return self
         end
 
-        def addWorkshopAttendees(attendees)
-            @attendees = @attendees.concat(attendees)
+        def addWorkshopFeedbacks(feedbacks)
+            @feedbacks = @feedbacks.concat(feedbacks)
             return self
         end
 
@@ -79,10 +79,10 @@ module Achievements
         end
 
         private def calculateAttendedWorkshopAchievements(student)
-            attendedAt = @attendees.select {|a| a.studentId == student.telegramId}.uniq {|a| a.workshopId}
+            studentFeedbacks = @feedbacks.select {|a| a.studentId == student.telegramId}.uniq {|a| a.workshopId}
             result = []
-            attendedAt.each { |a|
-                workshop = @homeWorks[a.workshopId]
+            studentFeedbacks.each { |f|
+                workshop = @homeWorks[f.workshopId]
                 if (workshop != nil)
                     result.push(
                         StudentsAchievement.new(
@@ -90,6 +90,14 @@ module Achievements
                             achievement: List::ATTENDED_WORKSHOP,
                             achievementReason: "For beeing a part of #{workshop.name}"
                     ))
+                    if (f.toImprove != nil && f.toImprove != "")
+                        result.push(
+                            StudentsAchievement.new(
+                                student: student,
+                                achievement: List::CRITIC,
+                                achievementReason: "For helping us improve #{workshop.name}"
+                        ))
+                    end
                 end
             }
             
@@ -154,12 +162,13 @@ module Achievements
         end
     end
 
-    class WorkshopAttending
-        attr_reader :workshopId, :studentId, :timestamp
-        def initialize(workshopId:, studentId:, timestamp:)
+    class WorkshopFeedback
+        attr_reader :workshopId, :studentId, :timestamp, :toImprove
+        def initialize(workshopId:, studentId:, timestamp:, toImprove:)
             @workshopId = workshopId
             @studentId = studentId
             @timestamp = timestamp
+            @toImprove = toImprove
         end
     end
 
