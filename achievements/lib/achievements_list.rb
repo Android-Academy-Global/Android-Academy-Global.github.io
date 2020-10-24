@@ -20,6 +20,7 @@ module Achievements
         HOME_WORK_COMPLETED_3 = Achievement.new(id: "homework_completed_3", value: 300, name: "3 Homeworks in the row", description: "#{HOME_WORK_GENERIC_DESCRIPTION} To get this achievement complete three homeworks in the row before the dead line.")
         HOME_WORK_COMPLETED_4 = Achievement.new(id: "homework_completed_4", value: 500, name: "4 Homeworks in the row", description: "#{HOME_WORK_GENERIC_DESCRIPTION} To get this achievement complete four homeworks in the row before the dead line.")
         HOME_WORK_COMPLETED_5 = Achievement.new(id: "homework_completed_5", value: 700, name: "5 Homeworks in the row", description: "#{HOME_WORK_GENERIC_DESCRIPTION} To get this achievement complete five homeworks in the row before the dead line.")
+        CRITIC = Achievement.new(id: "critic", value: 20, name: "Critic", description: "For helping us find things to improve.")
 
         ALL_ACHIEVEMENTS = [
             HELPING_HAND,
@@ -28,7 +29,8 @@ module Achievements
             HOME_WORK_COMPLETED_3,
             HOME_WORK_COMPLETED_4,
             HOME_WORK_COMPLETED_5,
-            ATTENDED_WORKSHOP
+            ATTENDED_WORKSHOP,
+            CRITIC
         ]
     end
 

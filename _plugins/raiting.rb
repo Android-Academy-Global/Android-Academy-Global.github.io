@@ -33,9 +33,9 @@ module Rating
           attendeesFileName = homework["id"] + "-attendees"
           if site.data[attendeesFileName] != nil
             attendees = site.data[attendeesFileName].map { |a|
-              WorkshopFeedback.new(workshopId: homework["id"], studentId: a["telegramId"], timestamp: parseTimeStamp(a["Timestamp"]))
+              WorkshopFeedback.new(workshopId: homework["id"], studentId: a["telegramId"], timestamp: parseTimeStamp(a["Timestamp"]), toImprove: a["toImprove"])
             }
-            ratingCalculator.addWorkshopAttendees(attendees)
+            ratingCalculator.addWorkshopFeedbacks(attendees)
           end
       }
 
