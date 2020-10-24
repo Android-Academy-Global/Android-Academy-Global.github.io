@@ -25,7 +25,7 @@ module Rating
       ratingCalculator.withHomeworks(homeWorks: homeWorks, homeworkReviews: homeWorksReviews)
 
       studentsHelps = site.data["students-helps"].map { |help|
-        StudentHelp.new(studentIdHowHelped: help["from"], studentIdWhoGotHelp: help["to"], comment: help["comment"])
+        StudentHelp.new(studentIdHowHelped: help["to"], studentIdWhoGotHelp: help["from"], comment: help["comment"])
       }
       ratingCalculator.withStudentsHelp(studentsHelps)
 
