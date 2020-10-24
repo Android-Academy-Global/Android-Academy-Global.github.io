@@ -147,13 +147,13 @@ class AchievementsTest < Minitest::Test
     )
   end
 
-  def test_students_attended_workshops
+  def test_students_left_feedback
     
-    firstAttendeeList = [
-      WorkshopAttending.new(workshopId: "workshop1", studentId: "student1", timestamp: DateTime.new(2000,9,20))
+    firstFeedbackList = [
+      WorkshopFeedback.new(workshopId: "workshop1", studentId: "student1", timestamp: DateTime.new(2000,9,20), toImprove: nil)
     ]
-    secondAttendeeList = [
-      WorkshopAttending.new(workshopId: "workshop2", studentId: "student2", timestamp: DateTime.new(2000,9,20))
+    secondFeedbackList = [
+      WorkshopFeedback.new(workshopId: "workshop2", studentId: "student2", timestamp: DateTime.new(2000,9,20), toImprove: nil)
     ]
     homeWorks = [
       HomeWork.new(id: "workshop1", name: "The first workshop", dueDate: DateTime.new(2000,9,15), orderNumber: 0),
@@ -163,8 +163,8 @@ class AchievementsTest < Minitest::Test
     studentsRating = @calculator
       .withStudents($testStudents)
       .withHomeworks(homeWorks: homeWorks, homeworkReviews: [])
-      .addWorkshopAttendees(firstAttendeeList)
-      .addWorkshopAttendees(secondAttendeeList)
+      .addWorkshopAttendees(firstFeedbackList)
+      .addWorkshopAttendees(secondFeedbackList)
       .calculate()
       .studentsRating
 
@@ -189,12 +189,11 @@ class AchievementsTest < Minitest::Test
     )
   end
 
-  def test_students_attended_workshops_only_once
-    
-    attendeeList = [
-      WorkshopAttending.new(workshopId: "workshop1", studentId: "student1", timestamp: DateTime.new(2000,9,20)),
-      WorkshopAttending.new(workshopId: "workshop1", studentId: "student1", timestamp: DateTime.new(2000,9,20)),
-      WorkshopAttending.new(workshopId: "workshop1", studentId: "student1", timestamp: DateTime.new(2000,9,20))
+  def test_students_left_many_feedbacks
+    feedbackList = [
+      WorkshopFeedback.new(workshopId: "workshop1", studentId: "student1", timestamp: DateTime.new(2000,9,20), toImprove: nil),
+      WorkshopFeedback.new(workshopId: "workshop1", studentId: "student1", timestamp: DateTime.new(2000,9,20), toImprove: nil),
+      WorkshopFeedback.new(workshopId: "workshop1", studentId: "student1", timestamp: DateTime.new(2000,9,20), toImprove: nil)
     ]
     homeWorks = [
       HomeWork.new(id: "workshop1", name: "the first workshop", dueDate: DateTime.new(2000,9,15), orderNumber: 0)
@@ -203,7 +202,7 @@ class AchievementsTest < Minitest::Test
     studentsRating = @calculator
       .withStudents($testStudents)
       .withHomeworks(homeWorks: homeWorks, homeworkReviews: [])
-      .addWorkshopAttendees(attendeeList)
+      .addWorkshopAttendees(feedbackList)
       .calculate()
       .studentsRating
 

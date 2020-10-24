@@ -154,12 +154,13 @@ module Achievements
         end
     end
 
-    class WorkshopAttending
-        attr_reader :workshopId, :studentId, :timestamp
-        def initialize(workshopId:, studentId:, timestamp:)
+    class WorkshopFeedback
+        attr_reader :workshopId, :studentId, :timestamp, :toImprove
+        def initialize(workshopId:, studentId:, timestamp:, toImprove:)
             @workshopId = workshopId
             @studentId = studentId
             @timestamp = timestamp
+            @toImprove = toImprove
         end
     end
 
