@@ -1,0 +1,23 @@
+---
+layout: default
+title: "FAQ"
+---
+<div class="accordion" id="accordionExample">
+
+    {% for faq in site.data.faq %}
+        <div class="card">
+            <div class="card-header" id="heading{{forloop.index}}">
+              <h2 class="mb-0">
+                <button class="btn btn-link btn-block text-left collapsed" type="button" data-toggle="collapse" data-target="#collapse{{forloop.index}}" aria-expanded="false" aria-controls="collapse{{forloop.index}}">
+                    {{ faq.question }}
+                </button>
+              </h2>
+            </div>
+            <div id="collapse{{forloop.index}}" class="collapse" aria-labelledby="heading{{forloop.index}}" data-parent="#accordionExample">
+              <div class="card-body">
+                {{faq.answer}}
+              </div>
+            </div>
+          </div>
+    {% endfor %}
+  </div>
