@@ -215,6 +215,33 @@ class AchievementsTest < Minitest::Test
 
     assert_equal(1, studentsRating[0].achievements.size)
   end
+
+  def test_students_left_best_question
+    bestQuestions = [
+      BestQuestion.new(workshopId: "workshop1", studentId: TelegramName.new("student1"), linkToQuestion: ""),
+      BestQuestion.new(workshopId: "workshop1", studentId: TelegramName.new("student1"), linkToQuestion: "http://test.com/q1")
+    ]
+    homeWorks = [
+      HomeWork.new(id: "workshop1", name: "the test", dueDate: DateTime.new(2000,9,15), orderNumber: 0)
+    ]
+    
+    studentsRating = @calculator
+      .withStudents($testStudents)
+      .withHomeworks(homeWorks: homeWorks, homeworkReviews: [])
+      .withBestQuestions(bestQuestions)
+      .calculate()
+      .studentsRating
+
+    assert_equal(2, studentsRating[0].achievements.size)
+    
+    bestQuestionAchievement = studentsRating[0].achievements[0]
+    assert_equal List::BEST_QUESTION, bestQuestionAchievement.achievement
+    assert_equal "For asking very good question at the test workshop.", bestQuestionAchievement.achievementReason
+
+    bestQuestionAchievementWithLink = studentsRating[0].achievements[1]
+    assert_equal List::BEST_QUESTION, bestQuestionAchievementWithLink.achievement
+    assert_equal "For asking <a href=\"http://test.com/q1\">very good question</a> at the test workshop.", bestQuestionAchievementWithLink.achievementReason
+  end
 end
 
 class TelegramNameTest < Minitest::Test
