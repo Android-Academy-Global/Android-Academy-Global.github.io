@@ -14,7 +14,7 @@ module Achievements
 
     module List
         ATTENDED_WORKSHOP = Achievement.new(id: "attended_workshop", value: 100, name: "Attended workshop", description: "Student attended workshop")
-        HELPING_HAND = Achievement.new(id: "helping_hand", value: 100, name: "Helping Hand", description: "Student helped some other student")
+        HELPING_HAND = Achievement.new(id: "helping_hand", value: 40, name: "Helping Hand", description: "Student helped some other student")
         HOME_WORK_COMPLETED_1 = Achievement.new(id: "homework_completed_1", value: 100, name: "Completed homework", description: "#{HOME_WORK_GENERIC_DESCRIPTION} Every time you send homework to your mentor before the deadline you get this achievement.")
         HOME_WORK_COMPLETED_2 = Achievement.new(id: "homework_completed_2", value: 200, name: "2 Homeworks in the row", description: "#{HOME_WORK_GENERIC_DESCRIPTION} To get this achievement complete two homeworks in the row before the dead line.")
         HOME_WORK_COMPLETED_3 = Achievement.new(id: "homework_completed_3", value: 300, name: "3 Homeworks in the row", description: "#{HOME_WORK_GENERIC_DESCRIPTION} To get this achievement complete three homeworks in the row before the dead line.")
