@@ -22,7 +22,8 @@ don't ever stop to
 in Android Academy's chats, and say 
 [thank you](https://forms.gle/bkXV6ZvfF7isFDpZ8)
 when you get help.
-[Visit workshops](/achievements/attended_workshop),
+[Attend workshops](/achievements/attended_workshop),
+[ask questions](achievements/best_question/) there,
 leave feedback to let us know that you've been there,
 make the learning process better 
 [highlighting what can be improved](/achievements/critic).
