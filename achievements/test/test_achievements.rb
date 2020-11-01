@@ -3,7 +3,7 @@ require 'achievements'
 
 include Achievements
 
-$testStudents = [Student.new(telegramId: "student1", name: "test1"), Student.new(telegramId: "student2", name: "test 2")]
+$testStudents = [Student.new(telegramId: TelegramName.new("student1"), name: "test1"), Student.new(telegramId: TelegramName.new("student2"), name: "test 2")]
 
 $testHomeworks = [
   HomeWork.new(id: "test_homework", name: "test homework", dueDate: DateTime.new(2000,9,15), orderNumber: 0),
@@ -13,6 +13,8 @@ $testHomeworks = [
   HomeWork.new(id: "test_homework_5", name: "test homework 5", dueDate: DateTime.new(2000,10,5), orderNumber: 4),
   HomeWork.new(id: "test_homework_6", name: "test homework 6", dueDate: DateTime.new(2000,10,10), orderNumber: 5)
 ]
+
+$testMentorId = TelegramName.new("testMentor")
 
 class AchievementsTest < Minitest::Test
 
@@ -31,8 +33,8 @@ class AchievementsTest < Minitest::Test
         HomeWork.new(id: "test_homework", name: "test", dueDate: DateTime.new(2000,9,15), orderNumber: 0)
       ]
       homeworkReviews = [
-        HomeWorkReview.new(homeWorkId: homeworks[0].id, mentorId: "test", studentId: $testStudents[0].telegramId, homeworkCompletedDate: DateTime.new(2000,9,16)),
-        HomeWorkReview.new(homeWorkId: homeworks[0].id, mentorId: "test", studentId: $testStudents[1].telegramId, homeworkCompletedDate: DateTime.new(2000,9,14))
+        HomeWorkReview.new(homeWorkId: homeworks[0].id, mentorId: $testMentorId, studentId: $testStudents[0].telegramId, homeworkCompletedDate: DateTime.new(2000,9,16)),
+        HomeWorkReview.new(homeWorkId: homeworks[0].id, mentorId: $testMentorId, studentId: $testStudents[1].telegramId, homeworkCompletedDate: DateTime.new(2000,9,14))
       ]
 
       studentsRating = @calculator
@@ -56,11 +58,11 @@ class AchievementsTest < Minitest::Test
 
   def test_not_completed_homework_breaks_the_stuck
     homeworkReviews = [
-      HomeWorkReview.new(homeWorkId: $testHomeworks[0].id, mentorId: "test", studentId: $testStudents[0].telegramId, homeworkCompletedDate: DateTime.new(2000,9,14)),
-      HomeWorkReview.new(homeWorkId: $testHomeworks[1].id, mentorId: "test", studentId: $testStudents[0].telegramId, homeworkCompletedDate: DateTime.new(2000,9,19)),
-      HomeWorkReview.new(homeWorkId: $testHomeworks[2].id, mentorId: "test", studentId: $testStudents[0].telegramId, homeworkCompletedDate: DateTime.new(2000,9,24)),
-      HomeWorkReview.new(homeWorkId: $testHomeworks[4].id, mentorId: "test", studentId: $testStudents[0].telegramId, homeworkCompletedDate: DateTime.new(2000,10,3)),
-      HomeWorkReview.new(homeWorkId: $testHomeworks[5].id, mentorId: "test", studentId: $testStudents[0].telegramId, homeworkCompletedDate: DateTime.new(2000,10,7))
+      HomeWorkReview.new(homeWorkId: $testHomeworks[0].id, mentorId: $testMentorId, studentId: $testStudents[0].telegramId, homeworkCompletedDate: DateTime.new(2000,9,14)),
+      HomeWorkReview.new(homeWorkId: $testHomeworks[1].id, mentorId: $testMentorId, studentId: $testStudents[0].telegramId, homeworkCompletedDate: DateTime.new(2000,9,19)),
+      HomeWorkReview.new(homeWorkId: $testHomeworks[2].id, mentorId: $testMentorId, studentId: $testStudents[0].telegramId, homeworkCompletedDate: DateTime.new(2000,9,24)),
+      HomeWorkReview.new(homeWorkId: $testHomeworks[4].id, mentorId: $testMentorId, studentId: $testStudents[0].telegramId, homeworkCompletedDate: DateTime.new(2000,10,3)),
+      HomeWorkReview.new(homeWorkId: $testHomeworks[5].id, mentorId: $testMentorId, studentId: $testStudents[0].telegramId, homeworkCompletedDate: DateTime.new(2000,10,7))
     ]
 
     studentsRating = @calculator
@@ -127,7 +129,7 @@ class AchievementsTest < Minitest::Test
 
   def test_student_help_student
     
-    helps = [StudentHelp.new(studentIdHowHelped: "student2", studentIdWhoGotHelp: "student1", comment: "test comment")]
+    helps = [StudentHelp.new(studentIdHowHelped: TelegramName.new("student2"), studentIdWhoGotHelp: TelegramName.new("student1"), comment: "test comment")]
     
     studentsRating = @calculator
       .withStudents($testStudents)
@@ -150,10 +152,10 @@ class AchievementsTest < Minitest::Test
   def test_students_left_feedback
     
     firstFeedbackList = [
-      WorkshopFeedback.new(workshopId: "workshop1", studentId: "student1", timestamp: DateTime.new(2000,9,20), toImprove: "")
+      WorkshopFeedback.new(workshopId: "workshop1", studentId: TelegramName.new("student1"), timestamp: DateTime.new(2000,9,20), toImprove: "")
     ]
     secondFeedbackList = [
-      WorkshopFeedback.new(workshopId: "workshop2", studentId: "student2", timestamp: DateTime.new(2000,9,20), toImprove: "test")
+      WorkshopFeedback.new(workshopId: "workshop2", studentId: TelegramName.new("student2"), timestamp: DateTime.new(2000,9,20), toImprove: "test")
     ]
     homeWorks = [
       HomeWork.new(id: "workshop1", name: "The first workshop", dueDate: DateTime.new(2000,9,15), orderNumber: 0),
@@ -196,9 +198,9 @@ class AchievementsTest < Minitest::Test
 
   def test_students_left_many_feedbacks
     feedbackList = [
-      WorkshopFeedback.new(workshopId: "workshop1", studentId: "student1", timestamp: DateTime.new(2000,9,20), toImprove: nil),
-      WorkshopFeedback.new(workshopId: "workshop1", studentId: "student1", timestamp: DateTime.new(2000,9,20), toImprove: nil),
-      WorkshopFeedback.new(workshopId: "workshop1", studentId: "student1", timestamp: DateTime.new(2000,9,20), toImprove: nil)
+      WorkshopFeedback.new(workshopId: "workshop1", studentId: TelegramName.new("student1"), timestamp: DateTime.new(2000,9,20), toImprove: nil),
+      WorkshopFeedback.new(workshopId: "workshop1", studentId: TelegramName.new("student1"), timestamp: DateTime.new(2000,9,20), toImprove: nil),
+      WorkshopFeedback.new(workshopId: "workshop1", studentId: TelegramName.new("student1"), timestamp: DateTime.new(2000,9,20), toImprove: nil)
     ]
     homeWorks = [
       HomeWork.new(id: "workshop1", name: "the first workshop", dueDate: DateTime.new(2000,9,15), orderNumber: 0)
@@ -212,5 +214,57 @@ class AchievementsTest < Minitest::Test
       .studentsRating
 
     assert_equal(1, studentsRating[0].achievements.size)
+  end
+end
+
+class TelegramNameTest < Minitest::Test
+  def test_compare_the_same_names()
+    first = TelegramName.new("test")
+    second = TelegramName.new("test")
+    assert first == second
+  end
+
+  def test_compare_names_with_space()
+    first = TelegramName.new("test")
+    second = TelegramName.new("test ")
+    assert first == second
+  end
+
+  def test_compare_names_with_without_at()
+    first = TelegramName.new("@test")
+    second = TelegramName.new("test")
+    assert first == second
+  end
+
+  def test_compare_names_with_with_different_case()
+    first = TelegramName.new("@TestTest")
+    second = TelegramName.new("@testtest")
+    assert first == second
+  end
+
+  def test_convert_telegram_name_to_string()
+    name = TelegramName.new("@TestTest")
+    concatedString = "test " + name
+    assert_equal "test @TestTest", concatedString
+  end
+
+  def test_convert_telegram_name_to_string_for_liquid()
+    name = TelegramName.new("@TestTest")
+    assert_equal "@TestTest", name.to_s
+  end
+
+  def test_hashes()
+    first = TelegramName.new("@Test")
+    second = TelegramName.new("test")
+    assert_equal first.hash, second.hash
+  end
+
+  def test_hashtables()
+    hash = { TelegramName.new("@Test1") => 1, TelegramName.new("test2") => 2 }
+    assert_equal 2, hash[TelegramName.new("test2")]
+  end
+
+  def test_compare_with_string()
+    assert_equal TelegramName.new("@Test"), "@Test"
   end
 end
