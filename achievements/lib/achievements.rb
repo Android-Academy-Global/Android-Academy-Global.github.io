@@ -11,6 +11,7 @@ module Achievements
             @homeWorks = Hash.new
             @helps = Hash.new
             @feedbacks = []
+            @bestQuestions = Hash.new
         end
 
         def withStudents(students)
@@ -18,6 +19,11 @@ module Achievements
             students.each { |s|
                 @students[s.telegramId] = s
             }
+            return self
+        end
+
+        def withBestQuestions(bestQuestions)
+            @bestQuestions = bestQuestions.group_by { |q| q.studentId }
             return self
         end
 
@@ -44,6 +50,7 @@ module Achievements
                 accumulator.addAchievements(calculateHomeWorkAchievements(student))
                 accumulator.addAchievements(calculateHelpingHandAchievements(student))
                 accumulator.addAchievements(calculateAttendedWorkshopAchievements(student))
+                accumulator.addAchievements(calculateBestQuestionsAchievement(student))
                 accumulator
             }
             currentRatingPosition = 0
@@ -133,6 +140,31 @@ module Achievements
                     end
                     lastCompletedHomework = homeWork.orderNumber
                 }
+            return result
+        end
+
+        private def calculateBestQuestionsAchievement(student)
+            studentsBestQuestions = @bestQuestions[student.telegramId]
+            if (studentsBestQuestions == nil)
+                return []
+            end
+            result = []
+            studentsBestQuestions.each { |q|
+                workshop = @homeWorks[q.workshopId]
+                if (workshop != nil)
+                    veryGoodQuestionText = "very good question"
+                    if (q.linkToQuestion != nil && q.linkToQuestion != '')
+                        veryGoodQuestionText = "<a href=\"#{q.linkToQuestion}\">#{veryGoodQuestionText}</a>"
+                    end
+                    result.push(
+                        StudentsAchievement.new(
+                            student: student,
+                            achievement: List::BEST_QUESTION,
+                            achievementReason: "For asking #{veryGoodQuestionText} at #{workshop.name} workshop."
+                        )
+                    )
+                end
+            }
             return result
         end
     end
@@ -233,6 +265,15 @@ module Achievements
             @studentIdHowHelped = studentIdHowHelped
             @studentIdWhoGotHelp = studentIdWhoGotHelp
             @comment = comment
+        end
+    end
+
+    class BestQuestion < Liquid::Drop
+        attr_reader :studentId, :workshopId, :linkToQuestion
+        def initialize(studentId:, workshopId:, linkToQuestion:)
+            @studentId = studentId
+            @workshopId = workshopId
+            @linkToQuestion = linkToQuestion
         end
     end
 

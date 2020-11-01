@@ -39,6 +39,11 @@ module Rating
           end
       }
 
+      bestQuestions = site.data["best-questions"].map {|q|
+        BestQuestion.new(workshopId: q["workshopId"], studentId: TelegramName.new(q["studentId"]), linkToQuestion: q["linkToQuestion"])
+      }
+      ratingCalculator.withBestQuestions(bestQuestions)
+
       rating = ratingCalculator.calculate().studentsRating
       ratingTemplate.data["rating"] = rating
 
