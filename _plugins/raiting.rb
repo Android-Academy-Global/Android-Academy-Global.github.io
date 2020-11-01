@@ -10,7 +10,7 @@ module Rating
       ratingCalculator = AchievementsCalculator.new()
 
       students = site.data["students"].map { |student|
-        Student.new(telegramId: student["telegramId"], name: student["name"])
+        Student.new(telegramId: TelegramName.new(student["telegramId"]), name: student["name"])
       }
       ratingCalculator.withStudents(students)
 
@@ -20,12 +20,12 @@ module Rating
         HomeWork.new(id: homework["id"], name: homework["name"], dueDate: parseDate(homework["dueDate"]), orderNumber: orderNumber)
       }
       homeWorksReviews = site.data["homework-reviews"].map { |review|
-        HomeWorkReview.new(homeWorkId: review["homeworkId"], mentorId: review["mentorId"], studentId: review["studentId"], homeworkCompletedDate: parseDate(review["homeworkCompleted"]))
+        HomeWorkReview.new(homeWorkId: review["homeworkId"], mentorId: TelegramName.new(review["mentorId"]), studentId: TelegramName.new(review["studentId"]), homeworkCompletedDate: parseDate(review["homeworkCompleted"]))
       }
       ratingCalculator.withHomeworks(homeWorks: homeWorks, homeworkReviews: homeWorksReviews)
 
       studentsHelps = site.data["students-helps"].map { |help|
-        StudentHelp.new(studentIdHowHelped: help["to"], studentIdWhoGotHelp: help["from"], comment: help["comment"])
+        StudentHelp.new(studentIdHowHelped: TelegramName.new(help["to"]), studentIdWhoGotHelp: TelegramName.new(help["from"]), comment: help["comment"])
       }
       ratingCalculator.withStudentsHelp(studentsHelps)
 
@@ -33,7 +33,7 @@ module Rating
           attendeesFileName = homework["id"] + "-attendees"
           if site.data[attendeesFileName] != nil
             attendees = site.data[attendeesFileName].map { |a|
-              WorkshopFeedback.new(workshopId: homework["id"], studentId: a["telegramId"], timestamp: parseTimeStamp(a["Timestamp"]), toImprove: a["toImprove"])
+              WorkshopFeedback.new(workshopId: homework["id"], studentId: TelegramName.new(a["telegramId"]), timestamp: parseTimeStamp(a["Timestamp"]), toImprove: a["toImprove"])
             }
             ratingCalculator.addWorkshopFeedbacks(attendees)
           end

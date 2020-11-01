@@ -236,4 +236,48 @@ module Achievements
         end
     end
 
+    class TelegramName < Liquid::Drop
+        
+        def initialize(name)
+            @name = name
+            @normalizedName = normalizeName(name)
+        end
+    
+        def ==(other)
+            if (other.is_a? String)
+                other = TelegramName.new(other)
+            end
+            return other.normalizedName == @normalizedName
+        end
+
+        def eql?(other)
+            return self == other
+        end
+
+        def hash
+            @normalizedName.hash
+        end
+
+        def to_str
+            @name
+        end
+
+        def to_s
+            @name
+        end
+
+        protected
+            def normalizedName
+                @normalizedName
+            end
+
+        private
+            def normalizeName(name)
+                result = name.strip() || name
+                result.sub! '@', ''
+                result.downcase!
+                return result
+            end
+    end
+
 end
