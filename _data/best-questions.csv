@@ -1,2 +1,2 @@
-studentId,workshopId,linkToQuestion
-@ivan,kotlin,"http://127.0.0.1:4000/faq/"
+mentorId,studentId,workshopId,question
+@test,@ivan,kotlin,"Why android academy is the best?"
