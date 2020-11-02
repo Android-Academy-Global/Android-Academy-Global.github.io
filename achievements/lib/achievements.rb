@@ -126,16 +126,24 @@ module Achievements
                     if (homeWork.orderNumber - 1 != lastCompletedHomework)
                         nextHomeworkAchievement = List::HOME_WORK_COMPLETED_1
                     end
+                    achievementReason = "For completing homework from #{homeWork.name} workshop"
                     if homeWork.dueDate >= homeWorkReview.homeworkCompletedDate
                         result.push(
                             StudentsAchievement.new(
                                 student: student,
                                 achievement: nextHomeworkAchievement,
-                                achievementReason: "For completing homework from #{homeWork.name} workshop"
+                                achievementReason: achievementReason
                             )
                         )
                         nextHomeworkAchievement = nextHomeworkCompleted(nextHomeworkAchievement)
                     else
+                        result.push(
+                            StudentsAchievement.new(
+                                student: student,
+                                achievement: List::LATE_HOMEWORK,
+                                achievementReason: achievementReason
+                            )
+                        )
                         nextHomeworkAchievement = List::HOME_WORK_COMPLETED_1
                     end
                     lastCompletedHomework = homeWork.orderNumber

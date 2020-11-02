@@ -51,9 +51,47 @@ class AchievementsTest < Minitest::Test
       
       assert_equal "student1", studentsRating[1].student.telegramId
       assert_equal 2, studentsRating[1].position
-      assert_equal [], studentsRating[1].achievements
-      assert_equal 0, studentsRating[1].totalScore
+      assert_equal 1, studentsRating[1].achievements.size
+      assert_equal List::LATE_HOMEWORK, studentsRating[1].achievements[0].achievement
+      assert_equal "For completing homework from test workshop", studentsRating[1].achievements[0].achievementReason
+      assert_equal List::LATE_HOMEWORK.value, studentsRating[1].totalScore
 
+  end
+
+  def test_late_homework_breaks_the_stuck
+    homeworkReviews = [
+      HomeWorkReview.new(homeWorkId: $testHomeworks[0].id, mentorId: $testMentorId, studentId: $testStudents[0].telegramId, homeworkCompletedDate: DateTime.new(2000,9,14)),
+      HomeWorkReview.new(homeWorkId: $testHomeworks[1].id, mentorId: $testMentorId, studentId: $testStudents[0].telegramId, homeworkCompletedDate: DateTime.new(2000,9,19)),
+      HomeWorkReview.new(homeWorkId: $testHomeworks[2].id, mentorId: $testMentorId, studentId: $testStudents[0].telegramId, homeworkCompletedDate: DateTime.new(2000,9,24)),
+      HomeWorkReview.new(homeWorkId: $testHomeworks[3].id, mentorId: $testMentorId, studentId: $testStudents[0].telegramId, homeworkCompletedDate: DateTime.new(2000,10,2)),
+      HomeWorkReview.new(homeWorkId: $testHomeworks[4].id, mentorId: $testMentorId, studentId: $testStudents[0].telegramId, homeworkCompletedDate: DateTime.new(2000,10,3)),
+      HomeWorkReview.new(homeWorkId: $testHomeworks[5].id, mentorId: $testMentorId, studentId: $testStudents[0].telegramId, homeworkCompletedDate: DateTime.new(2000,10,7))
+    ]
+
+    studentsRating = @calculator
+      .withStudents($testStudents)
+      .withHomeworks(homeWorks: $testHomeworks, homeworkReviews: homeworkReviews)
+      .calculate()
+      .studentsRating
+
+    firstStudentRating = studentsRating[0]
+    
+    assert_equal 1, firstStudentRating.position
+    assert_equal "student1", firstStudentRating.student.telegramId
+    
+    expectedAchivements = [
+      List::HOME_WORK_COMPLETED_1,
+      List::HOME_WORK_COMPLETED_2,
+      List::HOME_WORK_COMPLETED_3,
+      List::LATE_HOMEWORK,
+      List::HOME_WORK_COMPLETED_1,
+      List::HOME_WORK_COMPLETED_2
+    ]
+    actualAchievements = firstStudentRating.achievements.map { |sa| sa.achievement }
+    assert_equal(
+      expectedAchivements,
+      actualAchievements
+    )
   end
 
   def test_not_completed_homework_breaks_the_stuck
