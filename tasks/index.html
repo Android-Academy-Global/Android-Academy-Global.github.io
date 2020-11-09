@@ -1,0 +1,10 @@
+---
+layout: default
+title: "Extra tasks"
+---
+
+{% for task in page.tasks %}
+    <h3>
+        <a href="{{task.file}}">{{ task.title }}</a>
+    </h3>
+{% endfor %}
