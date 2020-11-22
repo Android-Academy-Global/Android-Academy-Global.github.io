@@ -20,7 +20,13 @@ module Rating
         HomeWork.new(id: homework["id"], name: homework["name"], dueDate: parseDate(homework["dueDate"]), orderNumber: orderNumber)
       }
       homeWorksReviews = site.data["homework-reviews"].map { |review|
-        HomeWorkReview.new(homeWorkId: review["homeworkId"], mentorId: TelegramName.new(review["mentorId"]), studentId: TelegramName.new(review["studentId"]), homeworkCompletedDate: parseDate(review["homeworkCompleted"]))
+        HomeWorkReview.new(
+          homeWorkId: review["homeworkId"],
+          mentorId: TelegramName.new(review["mentorId"]),
+          studentId: TelegramName.new(review["studentId"]),
+          homeworkCompletedDate: parseDate(review["homeworkCompleted"]),
+          mark: Integer(review["mark"])
+        )
       }
       ratingCalculator.withHomeworks(homeWorks: homeWorks, homeworkReviews: homeWorksReviews)
 

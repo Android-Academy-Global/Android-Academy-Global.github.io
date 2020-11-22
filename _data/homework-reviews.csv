@@ -1,4 +1,4 @@
-mentorId,studentId,homeworkCompleted,homeworkId
-@mentor1,@petr,2020-10-25,kotlin
-@mentor1,@ivan,2020-10-25,kotlin
-@mentor1,@petr,2020-10-25,activities
+mentorId,studentId,homeworkCompleted,homeworkId,mark
+@mentor1,@petr,2020-10-25,kotlin,10
+@mentor1,@ivan,2020-10-25,kotlin,5
+@mentor1,@petr,2020-10-25,activities,5
