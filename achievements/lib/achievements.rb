@@ -146,6 +146,15 @@ module Achievements
                         )
                         nextHomeworkAchievement = List::HOME_WORK_COMPLETED_1
                     end
+                    if (homeWorkReview.mark >= 9)
+                        result.push(
+                            StudentsAchievement.new(
+                                student: student,
+                                achievement: List::EXCELLENT_HOMEWORK,
+                                achievementReason: "For excellence in homework from #{homeWork.name} workshop"
+                            )
+                        )
+                    end
                     lastCompletedHomework = homeWork.orderNumber
                 }
             return result
@@ -258,12 +267,13 @@ module Achievements
     end
 
     class HomeWorkReview < Liquid::Drop
-        attr_reader :homeWorkId, :mentorId, :studentId, :homeworkCompletedDate
-        def initialize(homeWorkId:, mentorId:, studentId:, homeworkCompletedDate:)
+        attr_reader :homeWorkId, :mentorId, :studentId, :homeworkCompletedDate, :mark
+        def initialize(homeWorkId:, mentorId:, studentId:, homeworkCompletedDate:, mark:)
             @homeWorkId = homeWorkId
             @mentorId = mentorId
             @studentId = studentId
             @homeworkCompletedDate = homeworkCompletedDate
+            @mark = mark
         end
     end
 

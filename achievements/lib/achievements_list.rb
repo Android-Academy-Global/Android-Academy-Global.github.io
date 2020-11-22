@@ -23,6 +23,7 @@ module Achievements
         CRITIC = Achievement.new(id: "critic", value: 20, name: "Critic", description: "For helping us find things to improve.")
         BEST_QUESTION = Achievement.new(id: "best_question", value: 40, name: "The best question", description: "For asking very good questions.")
         LATE_HOMEWORK = Achievement.new(id: "late_homework", value: 40, name: "Late Homework", description: "It's great to get things done even after due date. Great job!")
+        EXCELLENT_HOMEWORK = Achievement.new(id: "excellent_homework", value: 30, name: "Excellent Homework", description: "Mentor put the highest mark for your homework. Well done!")
 
         ALL_ACHIEVEMENTS = [
             HELPING_HAND,
@@ -34,7 +35,8 @@ module Achievements
             ATTENDED_WORKSHOP,
             CRITIC,
             BEST_QUESTION,
-            LATE_HOMEWORK
+            LATE_HOMEWORK,
+            EXCELLENT_HOMEWORK
         ]
     end
 
