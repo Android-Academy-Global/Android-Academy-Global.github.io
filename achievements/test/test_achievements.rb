@@ -1,5 +1,6 @@
 require 'minitest/autorun'
 require 'achievements'
+require_relative 'AchievementsCalculatorTestDataBuilder.rb'
 
 include Achievements
 
@@ -19,58 +20,51 @@ $testMentorId = TelegramName.new("testMentor")
 class AchievementsTest < Minitest::Test
 
   def setup
+    @testData = AchievementsCalculatorTestDataBuilder.new()
     @calculator = AchievementsCalculator.new()
   end
 
+  def flushTestData
+    @testData.fillupCalculatorWithData(@calculator)
+  end
+
   def test_students_without_homeworks
-    calculatedRating = @calculator.withStudents($testStudents).calculate()
-    assert_equal ["student1", "student2"], calculatedRating.studentsRating.map { |r| r.student.telegramId }
+    first = @testData.addStudent()
+    second = @testData.addStudent()
+    flushTestData()
+
+    calculatedRating = @calculator.calculate()
+
+    assert_equal [first, second], calculatedRating.studentsRating.map { |r| r.student }
     calculatedRating.studentsRating.each { |r| assert_equal(1, r.position) }
   end
 
-  def test_student_completed_one_homework_in_time
-      homeworks = [
-        HomeWork.new(id: "test_homework", name: "test", dueDate: DateTime.new(2000,9,15), orderNumber: 0)
-      ]
-      homeworkReviews = [
-        HomeWorkReview.new(
-          homeWorkId: homeworks[0].id,
-          mentorId: $testMentorId,
-          studentId: $testStudents[0].telegramId,
-          homeworkCompletedDate: DateTime.new(2000,9,16),
-          mark: 10
-        ),
-        HomeWorkReview.new(
-          homeWorkId: homeworks[0].id,
-          mentorId: $testMentorId,
-          studentId: $testStudents[1].telegramId,
-          homeworkCompletedDate: DateTime.new(2000,9,14),
-          mark: 5
-        )
-      ]
+  def test_one_student_completed_homework_second_later_but_perfect
+    firstStudent = @testData.addStudent()
+    secondStudent = @testData.addStudent()
+    workshop = @testData.addWorkshop(name: "test")
+    @testData.studentCompletedHomeworkOnTime(firstStudent, workshop)
+    @testData.studentCompletedHomeworkAfterDueDate(secondStudent, workshop, mark: 10)
+    flushTestData()
+    
+    studentsRating = @calculator.calculate().studentsRating
+    
+    assert_equal 1, studentsRating[0].position
+    assert_equal firstStudent, studentsRating[0].student
+    assert_equal List::HOME_WORK_COMPLETED_1, studentsRating[0].achievements[0].achievement
+    assert_equal "For completing homework from test workshop", studentsRating[0].achievements[0].achievementReason
+    assert_equal List::HOME_WORK_COMPLETED_1.value, studentsRating[0].totalScore
+    
+    expextedScroreForFirstStudent = List::LATE_HOMEWORK.value + List::EXCELLENT_HOMEWORK.value
+    assert_equal secondStudent, studentsRating[1].student
+    assert_equal expextedScroreForFirstStudent, studentsRating[1].totalScore
+    assert_equal 2, studentsRating[1].position
+    assert_equal 2, studentsRating[1].achievements.size
+    assert_equal List::LATE_HOMEWORK, studentsRating[1].achievements[0].achievement
+    assert_equal "For completing homework from test workshop", studentsRating[1].achievements[0].achievementReason
 
-      studentsRating = @calculator
-        .withStudents($testStudents)
-        .withHomeworks(homeWorks: homeworks, homeworkReviews: homeworkReviews)
-        .calculate()
-        .studentsRating
-      
-      assert_equal 1, studentsRating[0].position
-      assert_equal "student2", studentsRating[0].student.telegramId
-      assert_equal List::HOME_WORK_COMPLETED_1, studentsRating[0].achievements[0].achievement
-      assert_equal "For completing homework from test workshop", studentsRating[0].achievements[0].achievementReason
-      assert_equal List::HOME_WORK_COMPLETED_1.value, studentsRating[0].totalScore
-      
-      expextedScroreForFirstStudent = List::LATE_HOMEWORK.value + List::EXCELLENT_HOMEWORK.value
-      assert_equal "student1", studentsRating[1].student.telegramId
-      assert_equal expextedScroreForFirstStudent, studentsRating[1].totalScore
-      assert_equal 2, studentsRating[1].position
-      assert_equal 2, studentsRating[1].achievements.size
-      assert_equal List::LATE_HOMEWORK, studentsRating[1].achievements[0].achievement
-      assert_equal "For completing homework from test workshop", studentsRating[1].achievements[0].achievementReason
-
-      assert_equal List::EXCELLENT_HOMEWORK, studentsRating[1].achievements[1].achievement
-      assert_equal "For excellence in homework from test workshop", studentsRating[1].achievements[1].achievementReason
+    assert_equal List::EXCELLENT_HOMEWORK, studentsRating[1].achievements[1].achievement
+    assert_equal "For excellence in homework from test workshop", studentsRating[1].achievements[1].achievementReason
   end
 
   def test_late_homework_breaks_the_stuck
