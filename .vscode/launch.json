@@ -11,8 +11,7 @@
             "useBundler": true,
             "pathToBundler": "/usr/local/bin/bundle",
             "pathToRDebugIDE": "/var/lib/gems/2.5.0/gems/ruby-debug-ide-0.7.2",
-            "program": "${workspaceRoot}/achievements/test/test_achievements.rb",
-            "args": ["--name", "AchievementsTest#test_not_completed_homework_breaks_the_stuck"]
+            "program": "${workspaceRoot}/achievements/test/test_achievements.rb"
         },
         {
             "name": "Debug rake",
