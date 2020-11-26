@@ -69,32 +69,21 @@ class AchievementsTest < Minitest::Test
 
   def test_late_homework_breaks_the_stuck
     student = @testData.addStudent()
+    6.times { |time|
+      workshop = @testData.addWorkshop()
+      if time == 3
+        @testData.studentCompletedHomeworkAfterDueDate(student, workshop)
+      else
+        @testData.studentCompletedHomeworkOnTime(student, workshop)
+      end
 
-    workshop0 = @testData.addWorkshop()
-    @testData.studentCompletedHomeworkOnTime(student, workshop0)
-
-    workshop1 = @testData.addWorkshop()
-    @testData.studentCompletedHomeworkOnTime(student, workshop1)
-
-    workshop2 = @testData.addWorkshop()
-    @testData.studentCompletedHomeworkOnTime(student, workshop2)
-
-    workshop3 = @testData.addWorkshop()
-    @testData.studentCompletedHomeworkAfterDueDate(student, workshop3)
-
-    workshop4 = @testData.addWorkshop()
-    @testData.studentCompletedHomeworkOnTime(student, workshop4)
-
-    workshop5 = @testData.addWorkshop()
-    @testData.studentCompletedHomeworkOnTime(student, workshop5)
-
+    }
     flushTestData()
 
 
     studentsRating = @calculator.calculate().studentsRating
 
     firstStudentRating = studentsRating[0]
-    
     assert_equal 1, firstStudentRating.position
     assert_equal student, firstStudentRating.student
     
