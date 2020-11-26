@@ -68,25 +68,35 @@ class AchievementsTest < Minitest::Test
   end
 
   def test_late_homework_breaks_the_stuck
-    homeworkReviews = [
-      HomeWorkReview.new(homeWorkId: $testHomeworks[0].id, mentorId: $testMentorId, studentId: $testStudents[0].telegramId, homeworkCompletedDate: DateTime.new(2000,9,14), mark: 5),
-      HomeWorkReview.new(homeWorkId: $testHomeworks[1].id, mentorId: $testMentorId, studentId: $testStudents[0].telegramId, homeworkCompletedDate: DateTime.new(2000,9,19), mark: 5),
-      HomeWorkReview.new(homeWorkId: $testHomeworks[2].id, mentorId: $testMentorId, studentId: $testStudents[0].telegramId, homeworkCompletedDate: DateTime.new(2000,9,24), mark: 5),
-      HomeWorkReview.new(homeWorkId: $testHomeworks[3].id, mentorId: $testMentorId, studentId: $testStudents[0].telegramId, homeworkCompletedDate: DateTime.new(2000,10,2), mark: 5),
-      HomeWorkReview.new(homeWorkId: $testHomeworks[4].id, mentorId: $testMentorId, studentId: $testStudents[0].telegramId, homeworkCompletedDate: DateTime.new(2000,10,3), mark: 5),
-      HomeWorkReview.new(homeWorkId: $testHomeworks[5].id, mentorId: $testMentorId, studentId: $testStudents[0].telegramId, homeworkCompletedDate: DateTime.new(2000,10,7), mark: 5)
-    ]
+    student = @testData.addStudent()
 
-    studentsRating = @calculator
-      .withStudents($testStudents)
-      .withHomeworks(homeWorks: $testHomeworks, homeworkReviews: homeworkReviews)
-      .calculate()
-      .studentsRating
+    workshop0 = @testData.addWorkshop()
+    @testData.studentCompletedHomeworkOnTime(student, workshop0)
+
+    workshop1 = @testData.addWorkshop()
+    @testData.studentCompletedHomeworkOnTime(student, workshop1)
+
+    workshop2 = @testData.addWorkshop()
+    @testData.studentCompletedHomeworkOnTime(student, workshop2)
+
+    workshop3 = @testData.addWorkshop()
+    @testData.studentCompletedHomeworkAfterDueDate(student, workshop3)
+
+    workshop4 = @testData.addWorkshop()
+    @testData.studentCompletedHomeworkOnTime(student, workshop4)
+
+    workshop5 = @testData.addWorkshop()
+    @testData.studentCompletedHomeworkOnTime(student, workshop5)
+
+    flushTestData()
+
+
+    studentsRating = @calculator.calculate().studentsRating
 
     firstStudentRating = studentsRating[0]
     
     assert_equal 1, firstStudentRating.position
-    assert_equal "student1", firstStudentRating.student.telegramId
+    assert_equal student, firstStudentRating.student
     
     expectedAchivements = [
       List::HOME_WORK_COMPLETED_1,
