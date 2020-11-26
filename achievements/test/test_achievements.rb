@@ -220,21 +220,14 @@ class AchievementsTest < Minitest::Test
   end
 
   def test_students_left_many_feedbacks
-    feedbackList = [
-      WorkshopFeedback.new(workshopId: "workshop1", studentId: TelegramName.new("student1"), timestamp: DateTime.new(2000,9,20), toImprove: nil),
-      WorkshopFeedback.new(workshopId: "workshop1", studentId: TelegramName.new("student1"), timestamp: DateTime.new(2000,9,20), toImprove: nil),
-      WorkshopFeedback.new(workshopId: "workshop1", studentId: TelegramName.new("student1"), timestamp: DateTime.new(2000,9,20), toImprove: nil)
-    ]
-    homeWorks = [
-      HomeWork.new(id: "workshop1", name: "the first workshop", dueDate: DateTime.new(2000,9,15), orderNumber: 0)
-    ]
+    student = @testData.addStudent()
+    workshop = @testData.addWorkshop()
+    5.times {
+      @testData.studentLeftFeedback(student, workshop)
+    }
+    flushTestData()
     
-    studentsRating = @calculator
-      .withStudents($testStudents)
-      .withHomeworks(homeWorks: homeWorks, homeworkReviews: [])
-      .addWorkshopFeedbacks(feedbackList)
-      .calculate()
-      .studentsRating
+    studentsRating = @calculator.calculate().studentsRating
 
     assert_equal(1, studentsRating[0].achievements.size)
   end
