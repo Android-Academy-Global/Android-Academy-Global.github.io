@@ -183,31 +183,21 @@ class AchievementsTest < Minitest::Test
   end
 
   def test_students_left_feedback
+    firstStudent = @testData.addStudent()
+    secondStudent = @testData.addStudent()
+    firstWorkshop = @testData.addWorkshop(name: "the first workshop")
+    secondWorkshop = @testData.addWorkshop(name: "the second workshop")
+    @testData.studentLeftFeedback(firstStudent, firstWorkshop)
+    @testData.studentLeftFeedback(secondStudent, secondWorkshop, toImprove: "test to improve")
+    flushTestData()
     
-    firstFeedbackList = [
-      WorkshopFeedback.new(workshopId: "workshop1", studentId: TelegramName.new("student1"), timestamp: DateTime.new(2000,9,20), toImprove: "")
-    ]
-    secondFeedbackList = [
-      WorkshopFeedback.new(workshopId: "workshop2", studentId: TelegramName.new("student2"), timestamp: DateTime.new(2000,9,20), toImprove: "test")
-    ]
-    homeWorks = [
-      HomeWork.new(id: "workshop1", name: "The first workshop", dueDate: DateTime.new(2000,9,15), orderNumber: 0),
-      HomeWork.new(id: "workshop2", name: "The second workshop", dueDate: DateTime.new(2000,9,20), orderNumber: 1),
-    ]
-    
-    studentsRating = @calculator
-      .withStudents($testStudents)
-      .withHomeworks(homeWorks: homeWorks, homeworkReviews: [])
-      .addWorkshopFeedbacks(firstFeedbackList)
-      .addWorkshopFeedbacks(secondFeedbackList)
-      .calculate()
-      .studentsRating
+    studentsRating = @calculator.calculate().studentsRating
 
-    firstStudentsAchievements = studentsRating.detect {|s| s.student.telegramId == "student1"}.achievements
+    firstStudentsAchievements = studentsRating.detect {|s| s.student == firstStudent }.achievements
     assert_equal 1, firstStudentsAchievements.size
     firstStudentAchievement = firstStudentsAchievements[0]
     assert_equal(
-      "For beeing a part of The first workshop",
+      "For beeing a part of the first workshop",
       firstStudentAchievement.achievementReason
     )
     assert_equal(
@@ -215,16 +205,16 @@ class AchievementsTest < Minitest::Test
       firstStudentAchievement.achievement
     )
 
-    secondStudentsAchievements = studentsRating.detect {|s| s.student.telegramId == "student2"}.achievements
+    secondStudentsAchievements = studentsRating.detect {|s| s.student == secondStudent}.achievements
     secondStudentAttendAchievemt = secondStudentsAchievements.detect {|sa| sa.achievement == List::ATTENDED_WORKSHOP}
     assert_equal(
-      "For beeing a part of The second workshop",
+      "For beeing a part of the second workshop",
       secondStudentAttendAchievemt.achievementReason
     )
 
     secondStudentCriticAchievemt = secondStudentsAchievements.detect {|sa| sa.achievement == List::CRITIC}
     assert_equal(
-      "For helping us improve The second workshop",
+      "For helping us improve the second workshop",
       secondStudentCriticAchievemt.achievementReason
     )
   end
