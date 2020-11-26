@@ -76,16 +76,11 @@ class AchievementsTest < Minitest::Test
       else
         @testData.studentCompletedHomeworkOnTime(student, workshop)
       end
-
     }
     flushTestData()
 
 
     studentsRating = @calculator.calculate().studentsRating
-
-    firstStudentRating = studentsRating[0]
-    assert_equal 1, firstStudentRating.position
-    assert_equal student, firstStudentRating.student
     
     expectedAchivements = [
       List::HOME_WORK_COMPLETED_1,
@@ -95,7 +90,7 @@ class AchievementsTest < Minitest::Test
       List::HOME_WORK_COMPLETED_1,
       List::HOME_WORK_COMPLETED_2
     ]
-    actualAchievements = firstStudentRating.achievements.map { |sa| sa.achievement }
+    actualAchievements = studentsRating[0].achievements.map { |sa| sa.achievement }
     assert_equal(
       expectedAchivements,
       actualAchievements
@@ -103,24 +98,19 @@ class AchievementsTest < Minitest::Test
   end
 
   def test_not_completed_homework_breaks_the_stuck
-    homeworkReviews = [
-      HomeWorkReview.new(homeWorkId: $testHomeworks[0].id, mentorId: $testMentorId, studentId: $testStudents[0].telegramId, homeworkCompletedDate: DateTime.new(2000,9,14), mark: 5),
-      HomeWorkReview.new(homeWorkId: $testHomeworks[1].id, mentorId: $testMentorId, studentId: $testStudents[0].telegramId, homeworkCompletedDate: DateTime.new(2000,9,19), mark: 5),
-      HomeWorkReview.new(homeWorkId: $testHomeworks[2].id, mentorId: $testMentorId, studentId: $testStudents[0].telegramId, homeworkCompletedDate: DateTime.new(2000,9,24), mark: 5),
-      HomeWorkReview.new(homeWorkId: $testHomeworks[4].id, mentorId: $testMentorId, studentId: $testStudents[0].telegramId, homeworkCompletedDate: DateTime.new(2000,10,3), mark: 5),
-      HomeWorkReview.new(homeWorkId: $testHomeworks[5].id, mentorId: $testMentorId, studentId: $testStudents[0].telegramId, homeworkCompletedDate: DateTime.new(2000,10,7), mark: 5)
-    ]
+    student = @testData.addStudent()
+    6.times { |time|
+      workshop = @testData.addWorkshop()
+      if time == 3
+        # homework not completed
+      else
+        @testData.studentCompletedHomeworkOnTime(student, workshop)
+      end
+    }
+    flushTestData()
 
-    studentsRating = @calculator
-      .withStudents($testStudents)
-      .withHomeworks(homeWorks: $testHomeworks, homeworkReviews: homeworkReviews)
-      .calculate()
-      .studentsRating
 
-    firstStudentRating = studentsRating[0]
-    
-    assert_equal 1, firstStudentRating.position
-    assert_equal "student1", firstStudentRating.student.telegramId
+    studentsRating = @calculator.calculate().studentsRating
     
     expectedAchivements = [
       List::HOME_WORK_COMPLETED_1,
@@ -129,7 +119,7 @@ class AchievementsTest < Minitest::Test
       List::HOME_WORK_COMPLETED_1,
       List::HOME_WORK_COMPLETED_2
     ]
-    actualAchievements = firstStudentRating.achievements.map { |sa| sa.achievement }
+    actualAchievements = studentsRating[0].achievements.map { |sa| sa.achievement }
     assert_equal(
       expectedAchivements,
       actualAchievements
