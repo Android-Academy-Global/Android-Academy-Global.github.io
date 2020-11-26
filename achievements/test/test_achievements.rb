@@ -164,19 +164,16 @@ class AchievementsTest < Minitest::Test
   end
 
   def test_student_help_student
+    firstStudent = @testData.addStudent()
+    secondStudent = @testData.addStudent()
+    @testData.studentHelpedStudent(from: firstStudent, to: secondStudent, comment: "test comment")
+    flushTestData()
     
-    helps = [StudentHelp.new(studentIdHowHelped: TelegramName.new("student2"), studentIdWhoGotHelp: TelegramName.new("student1"), comment: "test comment")]
-    
-    studentsRating = @calculator
-      .withStudents($testStudents)
-      .withStudentsHelp(helps)
-      .calculate()
-      .studentsRating
-
+    studentsRating = @calculator.calculate().studentsRating
     helpingHandAchievement = studentsRating[0].achievements[0]
     
     assert_equal(
-      "Comment from test1: test comment",
+      "Comment from student0Name: test comment",
       helpingHandAchievement.achievementReason
     )
     assert_equal(

@@ -50,7 +50,7 @@ class AchievementsCalculatorTestDataBuilder
         @homeworkReviews.push(homeworkReview)
     end
 
-    def studentHelpedStudent(from, to, comment: "test comment")
+    def studentHelpedStudent(from:, to:, comment: "test comment")
         help = StudentHelp.new(
             studentIdHowHelped: to.telegramId,
             studentIdWhoGotHelp: from.telegramId,
