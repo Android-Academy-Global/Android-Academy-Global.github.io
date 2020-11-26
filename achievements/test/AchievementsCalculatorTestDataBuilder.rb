@@ -63,10 +63,10 @@ class AchievementsCalculatorTestDataBuilder
         feedback = WorkshopFeedback.new(
             workshopId: workshop.id,
             studentId: sudent.telegramId,
-            timestamp: DateTime.new(2001,0,10),
+            timestamp: DateTime.new(2001,1,10),
             toImprove: toImprove
         )
-        feedbacks[workshop.id].push(feedback)
+        @feedbacks[workshop.id].push(feedback)
     end
 
 
