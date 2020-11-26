@@ -233,20 +233,13 @@ class AchievementsTest < Minitest::Test
   end
 
   def test_students_left_best_question
-    bestQuestions = [
-      BestQuestion.new(workshopId: "workshop1", studentId: TelegramName.new("student1"), linkToQuestion: ""),
-      BestQuestion.new(workshopId: "workshop1", studentId: TelegramName.new("student1"), linkToQuestion: "http://test.com/q1")
-    ]
-    homeWorks = [
-      HomeWork.new(id: "workshop1", name: "the test", dueDate: DateTime.new(2000,9,15), orderNumber: 0)
-    ]
+    student = @testData.addStudent()
+    workshop = @testData.addWorkshop(name: "the test")
+    @testData.studentLeftBestQuestion(student, workshop)
+    @testData.studentLeftBestQuestion(student, workshop, linkToQuestion: "http://test.com/q1")
+    flushTestData()
     
-    studentsRating = @calculator
-      .withStudents($testStudents)
-      .withHomeworks(homeWorks: homeWorks, homeworkReviews: [])
-      .withBestQuestions(bestQuestions)
-      .calculate()
-      .studentsRating
+    studentsRating = @calculator.calculate().studentsRating
 
     assert_equal(2, studentsRating[0].achievements.size)
     
