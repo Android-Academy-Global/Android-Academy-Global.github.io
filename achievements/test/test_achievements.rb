@@ -1,21 +1,7 @@
 require 'minitest/autorun'
 require 'achievements'
 require_relative 'AchievementsCalculatorTestDataBuilder.rb'
-
 include Achievements
-
-$testStudents = [Student.new(telegramId: TelegramName.new("student1"), name: "test1"), Student.new(telegramId: TelegramName.new("student2"), name: "test 2")]
-
-$testHomeworks = [
-  HomeWork.new(id: "test_homework", name: "test homework", dueDate: DateTime.new(2000,9,15), orderNumber: 0),
-  HomeWork.new(id: "test_homework_2", name: "test homework 2", dueDate: DateTime.new(2000,9,20), orderNumber: 1),
-  HomeWork.new(id: "test_homework_3", name: "test homework 3", dueDate: DateTime.new(2000,9,25), orderNumber: 2),
-  HomeWork.new(id: "test_homework_4", name: "test homework 4", dueDate: DateTime.new(2000,10,1), orderNumber: 3),
-  HomeWork.new(id: "test_homework_5", name: "test homework 5", dueDate: DateTime.new(2000,10,5), orderNumber: 4),
-  HomeWork.new(id: "test_homework_6", name: "test homework 6", dueDate: DateTime.new(2000,10,10), orderNumber: 5)
-]
-
-$testMentorId = TelegramName.new("testMentor")
 
 class AchievementsTest < Minitest::Test
 
