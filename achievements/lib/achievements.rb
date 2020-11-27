@@ -116,6 +116,7 @@ module Achievements
             if completedHomeworks == nil
                 return []
             end
+            completedHomeworks = completedHomeworks.uniq { |hw| hw.homeWorkId }
             result = []
             nextHomeworkAchievement = List::HOME_WORK_COMPLETED_1
             lastCompletedHomework = -99

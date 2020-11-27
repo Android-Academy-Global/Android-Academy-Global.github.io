@@ -125,6 +125,9 @@ class AchievementsTest < Minitest::Test
     6.times { |time|
       workshop = @testData.addWorkshop()
       @testData.studentCompletedHomeworkOnTime(student, workshop)
+      if time == 3
+        @testData.studentCompletedHomeworkOnTime(student, workshop) # few review of the same homework shouldn't affect anything
+      end
     }
     flushTestData()
 
