@@ -162,7 +162,7 @@ class AchievementsTest < Minitest::Test
     helpingHandAchievement = studentsRating[0].achievements[0]
     
     assert_equal(
-      "Comment from student0Name: test comment",
+      "Comment from <a href=\"/students/student0TelegramName/\">student0Name</a>: test comment",
       helpingHandAchievement.achievementReason
     )
     assert_equal(
