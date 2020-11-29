@@ -11,14 +11,14 @@ Discuss with maintainers what you want to do, and then just open PR.
 ### Building
 
 It's recommended to use [VS Code](https://code.visualstudio.com/),
-because [config file is already present](/blob/main/.vscode/launch.json).
+because [config file is already present](/.vscode/launch.json).
 Then follow the [Jekyll's guide](https://jekyllrb.com/docs/) to setup dev environment.
 
 Logic that calculates achievement implemented as a [plugin](https://jekyllrb.com/docs/plugins/generators/),
-see [achievements directory](/tree/main/achievements).
+see achievements directory.
 Plugin gets data from [csv files in _data directory](/tree/main/_data).
-Before deplayment build machine runs [synchronization script](/blob/main/sync-docs.sh) before deployment to download student's data from google sheet and save as a scv file.
+Before deplayment build machine runs [synchronization script](/sync-docs.sh) before deployment to download student's data from google sheet and save as a scv file.
 
-Building and deployment is based on [github actions](/blob/main/.github/workflows/jekyll-build.yml).
-To see deployment logic see the [script](/blob/main/deploy.sh).
+Building and deployment is based on [github actions](/.github/workflows/jekyll-build.yml).
+To see deployment logic see the [script](/deploy.sh).
 
