@@ -77,7 +77,7 @@ module Achievements
                         result.push(StudentsAchievement.new(
                             student: student,
                             achievement: List::HELPING_HAND,
-                            achievementReason: "Comment from #{studentWhoGotHelp.name}: #{h.comment}"
+                            achievementReason: "Comment from <a href=\"/students/#{studentWhoGotHelp.telegramId}/\">#{studentWhoGotHelp.name}</a>: #{h.comment}"
                         ))
                     end
                 }    
