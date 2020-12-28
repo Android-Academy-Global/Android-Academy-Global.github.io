@@ -17,6 +17,7 @@ curl "https://docs.google.com/spreadsheets/d/1hDvboEzKWpmYxl9VNzXKnY9ph8FBNKyDWO
 curl "https://docs.google.com/spreadsheets/d/1hDvboEzKWpmYxl9VNzXKnY9ph8FBNKyDWOV7JurhlvU/gviz/tq?tqx=out:csv&sheet=lists" > ./_data/lists-attendees.csv
 curl "https://docs.google.com/spreadsheets/d/1hDvboEzKWpmYxl9VNzXKnY9ph8FBNKyDWOV7JurhlvU/gviz/tq?tqx=out:csv&sheet=multithreading" > ./_data/multithreading-attendees.csv
 curl "https://docs.google.com/spreadsheets/d/1hDvboEzKWpmYxl9VNzXKnY9ph8FBNKyDWOV7JurhlvU/gviz/tq?tqx=out:csv&sheet=architecture" > ./_data/architecture-attendees.csv
+curl "https://docs.google.com/spreadsheets/d/1hDvboEzKWpmYxl9VNzXKnY9ph8FBNKyDWOV7JurhlvU/gviz/tq?tqx=out:csv&sheet=networking" > ./_data/networking-attendees.csv
 #TODO: add each workshop
 
 curl https://docs.google.com/spreadsheets/d/1U2TRkH_8oiHnzacwkjzXD-q2XhqvmAIp759iMYxlXKI/gviz/tq?tqx=out:csv > ./_data/students-helps.csv
