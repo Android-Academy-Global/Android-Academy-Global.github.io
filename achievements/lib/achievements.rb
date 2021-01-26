@@ -57,7 +57,7 @@ module Achievements
             currentScore = Float::INFINITY
             studentsRating = studentsAchievements
                 .sort_by { |a| -a.currentScore }
-                .map do |a| 
+                .map do |a|
                     if a.currentScore < currentScore
                         currentScore = a.currentScore
                         currentRatingPosition += 1
@@ -80,35 +80,39 @@ module Achievements
                             achievementReason: "Comment from <a href=\"/students/#{studentWhoGotHelp.telegramId}/\">#{studentWhoGotHelp.name}</a>: #{h.comment}"
                         ))
                     end
-                }    
+                }
             end
             return result
         end
 
         private def calculateAttendedWorkshopAchievements(student)
-            studentFeedbacks = @feedbacks.select {|a| a.studentId == student.telegramId}.uniq {|a| a.workshopId}
-            result = []
-            studentFeedbacks.each { |f|
-                workshop = @homeWorks[f.workshopId]
-                if (workshop != nil)
-                    result.push(
-                        StudentsAchievement.new(
-                            student: student,
-                            achievement: List::ATTENDED_WORKSHOP,
-                            achievementReason: "For beeing a part of #{workshop.name}"
-                    ))
-                    if (f.toImprove != nil && f.toImprove != "")
-                        result.push(
-                            StudentsAchievement.new(
-                                student: student,
-                                achievement: List::CRITIC,
-                                achievementReason: "For helping us improve #{workshop.name}"
-                        ))
-                    end
-                end
-            }
-            
-            return result
+          studentFeedbacks = @feedbacks.select { |a| a.studentId == student.telegramId }.group_by { |f| f.workshopId }
+
+          studentFeedbacks.each_with_object([]) do |(key, value), result|
+            workshop = @homeWorks[key]
+
+            next unless workshop
+
+            feedback = value.sort_by { |f| f.toImprove || '' }.last
+
+            result.push(
+              StudentsAchievement.new(
+                student: student,
+                achievement: List::ATTENDED_WORKSHOP,
+                achievementReason: "For beeing a part of #{workshop.name}"
+              )
+            )
+
+            next if feedback.toImprove == nil || feedback.toImprove == ""
+
+            result.push(
+              StudentsAchievement.new(
+                student: student,
+                achievement: List::CRITIC,
+                achievementReason: "For helping us improve #{workshop.name}"
+              )
+            )
+          end
         end
 
         private def calculateHomeWorkAchievements(student)
@@ -239,7 +243,7 @@ module Achievements
 
     class StudentsAchievement < Liquid::Drop
         attr_reader :student, :achievement, :achievementReason
-        
+
         def initialize(student:, achievement:, achievementReason:)
             @student = student
             @achievement = achievement
@@ -297,12 +301,12 @@ module Achievements
     end
 
     class TelegramName < Liquid::Drop
-        
+
         def initialize(name)
             @name = name
             @normalizedName = normalizeName(name)
         end
-    
+
         def ==(other)
             if (other.is_a? String)
                 other = TelegramName.new(other)
