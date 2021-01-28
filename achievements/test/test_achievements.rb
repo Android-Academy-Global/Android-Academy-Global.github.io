@@ -32,15 +32,15 @@ class AchievementsTest < Minitest::Test
     @testData.studentCompletedHomeworkOnTime(firstStudent, workshop)
     @testData.studentCompletedHomeworkAfterDueDate(secondStudent, workshop, mark: 10)
     flushTestData()
-    
+
     studentsRating = @calculator.calculate().studentsRating
-    
+
     assert_equal 1, studentsRating[0].position
     assert_equal firstStudent, studentsRating[0].student
     assert_equal List::HOME_WORK_COMPLETED_1, studentsRating[0].achievements[0].achievement
     assert_equal "For completing homework from test workshop", studentsRating[0].achievements[0].achievementReason
     assert_equal List::HOME_WORK_COMPLETED_1.value, studentsRating[0].totalScore
-    
+
     expextedScroreForFirstStudent = List::LATE_HOMEWORK.value + List::EXCELLENT_HOMEWORK.value
     assert_equal secondStudent, studentsRating[1].student
     assert_equal expextedScroreForFirstStudent, studentsRating[1].totalScore
@@ -71,7 +71,7 @@ class AchievementsTest < Minitest::Test
     firstStudentRating = studentsRating[0]
     assert_equal 1, firstStudentRating.position
     assert_equal student, firstStudentRating.student
-    
+
     expectedAchivements = [
       List::HOME_WORK_COMPLETED_1,
       List::HOME_WORK_COMPLETED_2,
@@ -105,7 +105,7 @@ class AchievementsTest < Minitest::Test
     firstStudentRating = studentsRating[0]
     assert_equal 1, firstStudentRating.position
     assert_equal student, firstStudentRating.student
-    
+
     expectedAchivements = [
       List::HOME_WORK_COMPLETED_1,
       List::HOME_WORK_COMPLETED_2,
@@ -136,7 +136,7 @@ class AchievementsTest < Minitest::Test
     firstStudentRating = studentsRating[0]
     assert_equal 1, firstStudentRating.position
     assert_equal student, firstStudentRating.student
-    
+
     expectedAchivements = [
       List::HOME_WORK_COMPLETED_1,
       List::HOME_WORK_COMPLETED_2,
@@ -157,10 +157,10 @@ class AchievementsTest < Minitest::Test
     secondStudent = @testData.addStudent()
     @testData.studentHelpedStudent(from: firstStudent, to: secondStudent, comment: "test comment")
     flushTestData()
-    
+
     studentsRating = @calculator.calculate().studentsRating
     helpingHandAchievement = studentsRating[0].achievements[0]
-    
+
     assert_equal(
       "Comment from <a href=\"/students/student0TelegramName/\">student0Name</a>: test comment",
       helpingHandAchievement.achievementReason
@@ -179,7 +179,7 @@ class AchievementsTest < Minitest::Test
     @testData.studentLeftFeedback(firstStudent, firstWorkshop)
     @testData.studentLeftFeedback(secondStudent, secondWorkshop, toImprove: "test to improve")
     flushTestData()
-    
+
     studentsRating = @calculator.calculate().studentsRating
 
     firstStudentsAchievements = studentsRating.detect {|s| s.student == firstStudent }.achievements
@@ -215,10 +215,44 @@ class AchievementsTest < Minitest::Test
       @testData.studentLeftFeedback(student, workshop)
     }
     flushTestData()
-    
+
     studentsRating = @calculator.calculate().studentsRating
 
     assert_equal(1, studentsRating[0].achievements.size)
+  end
+
+  def test_students_left_many_feedbacks_with_different_toImprove_value
+    student = @testData.addStudent()
+    workshop = @testData.addWorkshop()
+    @testData.studentLeftFeedback(student, workshop, toImprove: '')
+    @testData.studentLeftFeedback(student, workshop, toImprove: 'test')
+    @testData.studentLeftFeedback(student, workshop, toImprove: nil)
+
+    flushTestData()
+
+    studentsRating = @calculator.calculate().studentsRating
+
+    assert_equal(2, studentsRating[0].achievements.size)
+  end
+
+  def test_many_students_left_many_feedbacks_with_different_toImprove_value
+    student1 = @testData.addStudent()
+    student2 = @testData.addStudent()
+    workshop = @testData.addWorkshop()
+    @testData.studentLeftFeedback(student1, workshop, toImprove: '')
+    @testData.studentLeftFeedback(student1, workshop, toImprove: 'test')
+    @testData.studentLeftFeedback(student1, workshop, toImprove: nil)
+
+    @testData.studentLeftFeedback(student2, workshop, toImprove: '')
+    @testData.studentLeftFeedback(student2, workshop, toImprove: 'test')
+    @testData.studentLeftFeedback(student2, workshop, toImprove: nil)
+
+    flushTestData()
+
+    studentsRating = @calculator.calculate().studentsRating
+
+    assert_equal(2, studentsRating[0].achievements.size)
+    assert_equal(2, studentsRating[1].achievements.size)
   end
 
   def test_students_left_best_question
@@ -227,11 +261,11 @@ class AchievementsTest < Minitest::Test
     @testData.studentLeftBestQuestion(student, workshop)
     @testData.studentLeftBestQuestion(student, workshop, linkToQuestion: "http://test.com/q1")
     flushTestData()
-    
+
     studentsRating = @calculator.calculate().studentsRating
 
     assert_equal(2, studentsRating[0].achievements.size)
-    
+
     bestQuestionAchievement = studentsRating[0].achievements[0]
     assert_equal List::BEST_QUESTION, bestQuestionAchievement.achievement
     assert_equal "For asking very good question at the test workshop.", bestQuestionAchievement.achievementReason
