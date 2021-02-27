@@ -43,7 +43,13 @@ module Achievements
             CRITIC,
             BEST_QUESTION,
             LATE_HOMEWORK,
-            EXCELLENT_HOMEWORK
+            EXCELLENT_HOMEWORK,
+            HACKATHON_FIRST_PLACE,
+            HACKATHON_SECOND_PLACE,
+            HACKATHON_THIRD_PLACE,
+            HACKATHON_PARTICIPANT,
+            HACKATHON_BEST_IDEA,
+            HACKATHON_BEST_IMPLEMENTATION
         ]
     end
 
