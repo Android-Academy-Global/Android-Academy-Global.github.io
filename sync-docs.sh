@@ -9,6 +9,7 @@ wc -l ./_data/students.csv
 curl https://docs.google.com/spreadsheets/d/1Sz6IRJWDhzJLJnlAtrQknTsw470nTe5enPr8k3bXs1Q/gviz/tq?tqx=out:csv > ./_data/homeworks.csv
 curl "https://docs.google.com/spreadsheets/d/1ycYPofJUu3bQ4hyV6RoNzZydKVEpvqPQtFHHBPs8pvI/gviz/tq?tqx=out:csv&sheet=homeworks" > ./_data/homework-reviews.csv
 curl "https://docs.google.com/spreadsheets/d/1ycYPofJUu3bQ4hyV6RoNzZydKVEpvqPQtFHHBPs8pvI/gviz/tq?tqx=out:csv&sheet=best_questions" > ./_data/best-questions.csv
+curl "https://docs.google.com/spreadsheets/d/1ycYPofJUu3bQ4hyV6RoNzZydKVEpvqPQtFHHBPs8pvI/gviz/tq?tqx=out:csv&sheet=hackathon_participants" > ./_data/hackathon-participants.csv
 
 curl "https://docs.google.com/spreadsheets/d/1hDvboEzKWpmYxl9VNzXKnY9ph8FBNKyDWOV7JurhlvU/gviz/tq?tqx=out:csv&sheet=kotlin" > ./_data/kotlin-attendees.csv
 curl "https://docs.google.com/spreadsheets/d/1hDvboEzKWpmYxl9VNzXKnY9ph8FBNKyDWOV7JurhlvU/gviz/tq?tqx=out:csv&sheet=project" > ./_data/project-attendees.csv
@@ -24,6 +25,7 @@ curl "https://docs.google.com/spreadsheets/d/1hDvboEzKWpmYxl9VNzXKnY9ph8FBNKyDWO
 curl "https://docs.google.com/spreadsheets/d/1hDvboEzKWpmYxl9VNzXKnY9ph8FBNKyDWOV7JurhlvU/gviz/tq?tqx=out:csv&sheet=animations" > ./_data/advanced_ui-attendees.csv
 curl "https://docs.google.com/spreadsheets/d/1hDvboEzKWpmYxl9VNzXKnY9ph8FBNKyDWOV7JurhlvU/gviz/tq?tqx=out:csv&sheet=rx_intro" > ./_data/rx_intro-attendees.csv
 
-#TODO: add each workshop
 
 curl https://docs.google.com/spreadsheets/d/1U2TRkH_8oiHnzacwkjzXD-q2XhqvmAIp759iMYxlXKI/gviz/tq?tqx=out:csv > ./_data/students-helps.csv
+
+curl "https://docs.google.com/spreadsheets/d/1mEVm7DDKMDuMBjsJwP-v5XzIQ3Yijd9DduHLaOz5Ca0/gviz/tq?tqx=out:csv&sheet=hackathon" > ./_data/hackathon-winners.csv
