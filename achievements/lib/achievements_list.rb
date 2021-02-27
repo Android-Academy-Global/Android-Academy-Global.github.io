@@ -25,6 +25,13 @@ module Achievements
         LATE_HOMEWORK = Achievement.new(id: "late_homework", value: 40, name: "Late Homework", description: "It's great to get things done even after due date. Great job!")
         EXCELLENT_HOMEWORK = Achievement.new(id: "excellent_homework", value: 30, name: "Excellent Homework", description: "Mentor put the highest mark for your homework. Well done!")
 
+        HACKATHON_FIRST_PLACE = Achievement.new(id: "hackathon_first_place", value: 1000, name: "The hackathon winner", description: "Implemented the best app on the Hackathon")
+        HACKATHON_SECOND_PLACE = Achievement.new(id: "hackathon_second_place", value: 800, name: "Second place on hackathon", description: "Took the second place on the hackathon")
+        HACKATHON_THIRD_PLACE = Achievement.new(id: "hackathon_third_place", value: 600, name: "Third place on hackathon", description: "Took the third place on the hackathon")
+        HACKATHON_PARTICIPANT = Achievement.new(id: "hackathon_participant", value: 400, name: "The hackathon veteran", description: "Got throught the hackathon")
+        HACKATHON_BEST_IDEA = Achievement.new(id: "hackathon_best_idea", value: 700, name: "Best idea on the Hackathon", description: "Implemented project with the best idea on the hackathon")
+        HACKATHON_BEST_IMPLEMENTATION = Achievement.new(id: "hackathon_best_implementation", value: 700, name: "Best implementation on the Hackathon", description: "Implemented project better then anyone else")
+
         ALL_ACHIEVEMENTS = [
             HELPING_HAND,
             HOME_WORK_COMPLETED_1,
