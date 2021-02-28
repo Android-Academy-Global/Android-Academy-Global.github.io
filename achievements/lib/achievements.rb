@@ -12,6 +12,7 @@ module Achievements
             @helps = Hash.new
             @feedbacks = []
             @bestQuestions = Hash.new
+            @hackathonParticipants = Hash.new
         end
 
         def withStudents(students)
@@ -44,6 +45,12 @@ module Achievements
             return self
         end
 
+        def withHackthonParticipants(partisipants)
+            partisipants.each { |p|
+                @hackathonParticipants[p.studentId] = p
+            } 
+        end
+
         def calculate()
             studentsAchievements = @students.map { |id, student|
                 accumulator = StudentAccomulator.new(student)
@@ -51,6 +58,7 @@ module Achievements
                 accumulator.addAchievements(calculateHelpingHandAchievements(student))
                 accumulator.addAchievements(calculateAttendedWorkshopAchievements(student))
                 accumulator.addAchievements(calculateBestQuestionsAchievement(student))
+                accumulator.addAchievements(calculateHackthonPartisipantAchievement(student))
                 accumulator
             }
             currentRatingPosition = 0
@@ -188,6 +196,21 @@ module Achievements
                 end
             }
             return result
+        end
+
+        private def calculateHackthonPartisipantAchievement(student)
+            partisipant = @hackathonParticipants[student.telegramId]
+            if (partisipant == nil)
+                return []
+            else
+                return [
+                    StudentsAchievement.new(
+                        student: student,
+                        achievement: List::HACKATHON_PARTICIPANT,
+                        achievementReason: "For getting throught hackathon with \"#{partisipant.teamName}\"."
+                    )
+                ]
+            end
         end
     end
 

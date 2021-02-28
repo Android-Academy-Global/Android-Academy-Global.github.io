@@ -274,6 +274,18 @@ class AchievementsTest < Minitest::Test
     assert_equal List::BEST_QUESTION, bestQuestionAchievementWithLink.achievement
     assert_equal "For asking <a href=\"http://test.com/q1\">very good question</a> at the test workshop.", bestQuestionAchievementWithLink.achievementReason
   end
+
+  def test_studens_took_part_in_hackathon
+    student = @testData.addStudent()
+    @testData.studentGotThroughtHackathon(student, "test team")
+    flushTestData()
+
+    studentsRating = @calculator.calculate().studentsRating
+
+    hackathonAchievement = studentsRating[0].achievements[0]
+    assert_equal List::HACKATHON_PARTICIPANT, hackathonAchievement.achievement
+    assert_equal "For getting throught hackathon with \"test team\".", hackathonAchievement.achievementReason
+  end
 end
 
 class TelegramNameTest < Minitest::Test
