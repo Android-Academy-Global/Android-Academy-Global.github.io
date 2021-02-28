@@ -1,1 +1,6 @@
 "studentId","achievementId","reason"
+@ivan,"hackathon_first_place","for winning the hackaton"
+@petr,"hackathon_second_place","almost did it"
+@ivan,"hackathon_third_place","also the third"
+petr,"hackathon_best_idea","the greatest idea"
+petr,"hackathon_best_implementation","the best implementation also"

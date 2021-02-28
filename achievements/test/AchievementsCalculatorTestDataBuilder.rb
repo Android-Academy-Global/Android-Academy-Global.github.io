@@ -11,6 +11,7 @@ class AchievementsCalculatorTestDataBuilder
         @studentHelps = []
         @bestQuestions = []
         @hackathonParticipants = []
+        @manualAchiements = []
     end
 
     def addStudent
@@ -88,12 +89,22 @@ class AchievementsCalculatorTestDataBuilder
         @hackathonParticipants.push(partisipant)
     end
 
+    def studentGotManualAchievement(student, achievementId, reason)
+        achievement = ManualAchievement.new(
+            studentId: student.telegramId,
+            achievementId: achievementId,
+            reason: reason
+        )
+        @manualAchiements.push(achievement)
+    end
+
     def fillupCalculatorWithData(calculator)
         calculator.withStudents(@students)
             .withHomeworks(homeWorks: @workshops, homeworkReviews: @homeworkReviews)
             .withStudentsHelp(@studentHelps)
             .withBestQuestions(@bestQuestions)
             .withHackthonParticipants(@hackathonParticipants)
+            .withManualAchievements(@manualAchiements)
         @feedbacks.each { |key, value|
             calculator.addWorkshopFeedbacks(value)    
         }

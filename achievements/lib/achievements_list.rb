@@ -51,6 +51,8 @@ module Achievements
             HACKATHON_BEST_IDEA,
             HACKATHON_BEST_IMPLEMENTATION
         ]
+
+        ALL_ACHIEVEMENTS_INDEXED = Hash[ALL_ACHIEVEMENTS.map { |a| [a.id, a] } ]
     end
 
     def nextHomeworkCompleted(achievement)

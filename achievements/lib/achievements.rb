@@ -13,6 +13,7 @@ module Achievements
             @feedbacks = []
             @bestQuestions = Hash.new
             @hackathonParticipants = Hash.new
+            @manualAchievements = Hash.new
         end
 
         def withStudents(students)
@@ -48,7 +49,20 @@ module Achievements
         def withHackthonParticipants(partisipants)
             partisipants.each { |p|
                 @hackathonParticipants[p.studentId] = p
-            } 
+            }
+            return self
+        end
+
+        def withManualAchievements(achievements)
+            achievements.each { |a|
+                currentStudentAchievements = @manualAchievements[a.studentId]
+                if (currentStudentAchievements == nil)
+                    currentStudentAchievements = []
+                    @manualAchievements[a.studentId] = currentStudentAchievements
+                end
+                currentStudentAchievements.push(a)
+            }
+            return self
         end
 
         def calculate()
@@ -59,6 +73,7 @@ module Achievements
                 accumulator.addAchievements(calculateAttendedWorkshopAchievements(student))
                 accumulator.addAchievements(calculateBestQuestionsAchievement(student))
                 accumulator.addAchievements(calculateHackthonPartisipantAchievement(student))
+                accumulator.addAchievements(calculateManualAchievements(student))
                 accumulator
             }
             currentRatingPosition = 0
@@ -210,6 +225,28 @@ module Achievements
                         achievementReason: "For getting throught hackathon with \"#{partisipant.teamName}\"."
                     )
                 ]
+            end
+        end
+
+        private def calculateManualAchievements(student)
+            achievements = @manualAchievements[student.telegramId]
+            if (achievements == nil)
+                return []
+            else
+                result = []
+                achievements.each { |a|
+                    achievementToGive = List::ALL_ACHIEVEMENTS_INDEXED[a.achievementId]
+                    if (achievementToGive != nil)
+                        result.push(
+                            StudentsAchievement.new(
+                                student: student,
+                                achievement: achievementToGive,
+                                achievementReason: a.reason
+                            )
+                        )
+                    end
+                }
+                return result
             end
         end
     end

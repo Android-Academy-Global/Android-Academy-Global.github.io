@@ -55,6 +55,11 @@ module Rating
       }
       ratingCalculator.withHackthonParticipants(hackathonParticipants)
 
+      manualAchiements = site.data["hackathon-winners"].map { |w|
+        ManualAchievement.new(studentId: TelegramName.new(w["studentId"]), achievementId:w["achievementId"], reason:w["reason"])
+      }
+      ratingCalculator.withManualAchievements(manualAchiements)
+
       rating = ratingCalculator.calculate().studentsRating
       ratingTemplate.data["rating"] = rating
 

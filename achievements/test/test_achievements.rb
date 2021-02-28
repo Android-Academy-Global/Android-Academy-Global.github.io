@@ -286,6 +286,42 @@ class AchievementsTest < Minitest::Test
     assert_equal List::HACKATHON_PARTICIPANT, hackathonAchievement.achievement
     assert_equal "For getting throught hackathon with \"test team\".", hackathonAchievement.achievementReason
   end
+
+  def test_give_student_achievement_manually
+    student1 = @testData.addStudent()
+    winndingReason = "for project 1"
+    @testData.studentGotManualAchievement(student1, List::HACKATHON_FIRST_PLACE.id, winndingReason)
+  
+    bestImplementationReason = "For the clean architecture on hackathon"
+    @testData.studentGotManualAchievement(student1, List::HACKATHON_BEST_IMPLEMENTATION.id, bestImplementationReason)
+
+    student2 = @testData.addStudent()
+    winndingReason2 = "for project 2"
+    @testData.studentGotManualAchievement(student2, List::HACKATHON_SECOND_PLACE.id, winndingReason2)
+  
+    bestIdeaReason = "For the most social idea"
+    @testData.studentGotManualAchievement(student2, List::HACKATHON_BEST_IDEA.id, bestIdeaReason)
+
+    flushTestData()
+
+    studentsRating = @calculator.calculate().studentsRating
+
+    winningAchievement = studentsRating[0].achievements[0]
+    assert_equal List::HACKATHON_FIRST_PLACE, winningAchievement.achievement
+    assert_equal winndingReason, winningAchievement.achievementReason
+
+    bestImplementationAchievement = studentsRating[0].achievements[1]
+    assert_equal List::HACKATHON_BEST_IMPLEMENTATION, bestImplementationAchievement.achievement
+    assert_equal bestImplementationReason, bestImplementationAchievement.achievementReason
+
+    secondPlaceAchievement = studentsRating[1].achievements[0]
+    assert_equal List::HACKATHON_SECOND_PLACE, secondPlaceAchievement.achievement
+    assert_equal winndingReason2, secondPlaceAchievement.achievementReason
+
+    bestIdeaAchievement = studentsRating[1].achievements[1]
+    assert_equal List::HACKATHON_BEST_IDEA, bestIdeaAchievement.achievement
+    assert_equal bestIdeaReason, bestIdeaAchievement.achievementReason
+  end
 end
 
 class TelegramNameTest < Minitest::Test
