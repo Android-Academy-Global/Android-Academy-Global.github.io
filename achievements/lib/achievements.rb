@@ -12,6 +12,8 @@ module Achievements
             @helps = Hash.new
             @feedbacks = []
             @bestQuestions = Hash.new
+            @hackathonParticipants = Hash.new
+            @manualAchievements = Hash.new
         end
 
         def withStudents(students)
@@ -44,6 +46,25 @@ module Achievements
             return self
         end
 
+        def withHackthonParticipants(partisipants)
+            partisipants.each { |p|
+                @hackathonParticipants[p.studentId] = p
+            }
+            return self
+        end
+
+        def withManualAchievements(achievements)
+            achievements.each { |a|
+                currentStudentAchievements = @manualAchievements[a.studentId]
+                if (currentStudentAchievements == nil)
+                    currentStudentAchievements = []
+                    @manualAchievements[a.studentId] = currentStudentAchievements
+                end
+                currentStudentAchievements.push(a)
+            }
+            return self
+        end
+
         def calculate()
             studentsAchievements = @students.map { |id, student|
                 accumulator = StudentAccomulator.new(student)
@@ -51,6 +72,8 @@ module Achievements
                 accumulator.addAchievements(calculateHelpingHandAchievements(student))
                 accumulator.addAchievements(calculateAttendedWorkshopAchievements(student))
                 accumulator.addAchievements(calculateBestQuestionsAchievement(student))
+                accumulator.addAchievements(calculateHackthonPartisipantAchievement(student))
+                accumulator.addAchievements(calculateManualAchievements(student))
                 accumulator
             }
             currentRatingPosition = 0
@@ -189,6 +212,43 @@ module Achievements
             }
             return result
         end
+
+        private def calculateHackthonPartisipantAchievement(student)
+            partisipant = @hackathonParticipants[student.telegramId]
+            if (partisipant == nil)
+                return []
+            else
+                return [
+                    StudentsAchievement.new(
+                        student: student,
+                        achievement: List::HACKATHON_PARTICIPANT,
+                        achievementReason: "For getting throught hackathon with \"#{partisipant.teamName}\"."
+                    )
+                ]
+            end
+        end
+
+        private def calculateManualAchievements(student)
+            achievements = @manualAchievements[student.telegramId]
+            if (achievements == nil)
+                return []
+            else
+                result = []
+                achievements.each { |a|
+                    achievementToGive = List::ALL_ACHIEVEMENTS_INDEXED[a.achievementId]
+                    if (achievementToGive != nil)
+                        result.push(
+                            StudentsAchievement.new(
+                                student: student,
+                                achievement: achievementToGive,
+                                achievementReason: a.reason
+                            )
+                        )
+                    end
+                }
+                return result
+            end
+        end
     end
 
     class StudentAccomulator
@@ -297,6 +357,23 @@ module Achievements
             @studentId = studentId
             @workshopId = workshopId
             @linkToQuestion = linkToQuestion
+        end
+    end
+
+    class ManualAchievement
+        attr_reader :studentId, :achievementId, :reason
+        def initialize(studentId:, achievementId:, reason:)
+            @studentId = studentId
+            @achievementId = achievementId
+            @reason = reason
+        end
+    end
+
+    class HackathonParticipant
+        attr_reader :studentId, :teamName
+        def initialize(studentId:, teamName:)
+            @studentId = studentId
+            @teamName = teamName
         end
     end
 
