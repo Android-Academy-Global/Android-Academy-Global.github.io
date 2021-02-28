@@ -50,6 +50,11 @@ module Rating
       }
       ratingCalculator.withBestQuestions(bestQuestions)
 
+      hackathonParticipants = site.data["hackathon-participants"].map { |p|
+        HackathonParticipant.new(studentId: TelegramName.new(p["studentId"]), teamName: p["team"])
+      }
+      ratingCalculator.withHackthonParticipants(hackathonParticipants)
+
       rating = ratingCalculator.calculate().studentsRating
       ratingTemplate.data["rating"] = rating
 
