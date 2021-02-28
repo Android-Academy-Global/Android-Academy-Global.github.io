@@ -300,6 +300,23 @@ module Achievements
         end
     end
 
+    class ManualAchievement
+        attr_reader :studentId, :achievementId, :reason
+        def initialize(studentId:, achievementId:, reason:)
+            @studentId = studentId
+            @achievementId = achievementId
+            @reason = reason
+        end
+    end
+
+    class HackathonParticipant
+        attr_reader :studentId, :teamName
+        def initialize(studentId:, teamName:)
+            @studentId = studentId
+            @teamName = teamName
+        end
+    end
+
     class TelegramName < Liquid::Drop
 
         def initialize(name)
